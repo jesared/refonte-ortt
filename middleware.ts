@@ -1,32 +1,27 @@
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-import { auth } from "@/auth";
+const SIGN_IN_PATH = "/api/auth/signin";
 
-const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
-  .split(",")
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean);
+export async function middleware(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-const ADMIN_LOGIN_PATH = "/auth/admin";
+  if (!token) {
+    const signInUrl = new URL(SIGN_IN_PATH, request.url);
+    signInUrl.searchParams.set(
+      "callbackUrl",
+      `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    );
 
-export default auth((request) => {
-  const email = request.auth?.user?.email?.toLowerCase();
-
-  if (!email) {
-    const loginUrl = new URL(ADMIN_LOGIN_PATH, request.nextUrl.origin);
-    loginUrl.searchParams.set("error", "auth_required");
-    loginUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  if (!adminEmails.includes(email)) {
-    const loginUrl = new URL(ADMIN_LOGIN_PATH, request.nextUrl.origin);
-    loginUrl.searchParams.set("error", "forbidden");
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(signInUrl);
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/admin/:path*"],
