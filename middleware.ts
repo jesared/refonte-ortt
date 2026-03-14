@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(signInUrl);
   }
 
-  if (isAdminRoute && !token?.isAdmin) {
+  if (isAdminRoute && token?.role !== "ADMIN") {
     const forbiddenUrl = new URL("/auth/admin", req.url);
     forbiddenUrl.searchParams.set("error", "forbidden");
     forbiddenUrl.searchParams.set(
