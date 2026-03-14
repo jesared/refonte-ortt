@@ -3,6 +3,8 @@ import Google from "next-auth/providers/google";
 
 import { prisma } from "@/lib/prisma";
 
+type AppRole = "ADMIN" | "EDITOR" | "USER";
+
 const ROLES = {
   ADMIN: "ADMIN",
   USER: "USER",
@@ -33,7 +35,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return false;
       }
 
-      const role = adminEmails.includes(email) ? ROLES.ADMIN : ROLES.USER;
+      const role: AppRole = adminEmails.includes(email) ? ROLES.ADMIN : ROLES.USER;
 
       await prisma.user.upsert({
         where: { email },
@@ -66,16 +68,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         select: { role: true },
       });
 
-      token.role = dbUser?.role ?? ROLES.USER;
-      token.isAdmin = token.role === ROLES.ADMIN;
+      const role: AppRole = (dbUser?.role as AppRole | undefined) ?? ROLES.USER;
+      token.role = role;
+      token.isAdmin = role === ROLES.ADMIN;
 
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.email = token.email ?? session.user.email;
-        session.user.role = token.role ?? ROLES.USER;
-        session.user.isAdmin = token.role === ROLES.ADMIN;
+
+        const role: AppRole =
+          (typeof token.role === "string" ? (token.role as AppRole) : undefined) ?? ROLES.USER;
+
+        session.user.role = role;
+        session.user.isAdmin = role === ROLES.ADMIN;
       }
 
       return session;
