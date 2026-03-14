@@ -24,19 +24,19 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const { data: session } = useSession();
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-5 py-4">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Administration</p>
         <h2 className="mt-1 text-sm font-semibold text-foreground">Olympique Rémois Tennis de Table</h2>
       </div>
-      <nav aria-label="Navigation principale" className="flex-1 px-3 py-4">
+      <nav aria-label="Navigation principale" className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {navigation.map((item) => (
             <SidebarItem key={item.href} {...item} onClick={onCloseMobile} />
           ))}
         </ul>
       </nav>
-      <div className="mt-auto border-t border-border px-3 py-3">
+      <div className="shrink-0 border-t border-border px-3 py-3">
         <p className="mb-3 truncate px-3 text-xs font-medium text-muted-foreground">
           {session?.user?.email ?? "Utilisateur non connecté"}
         </p>
