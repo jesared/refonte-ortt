@@ -15,6 +15,9 @@ const authSecret =
   process.env.NEXTAUTH_SECRET ??
   (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
 
+const sessionStrategy =
+  process.env.AUTH_SESSION_STRATEGY === "database" ? "database" : "jwt";
+
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
 
@@ -35,7 +38,7 @@ export const authConfig: NextAuthConfig = {
   trustHost: true,
 
   session: {
-    strategy: "jwt",
+    strategy: sessionStrategy,
   },
 
   callbacks: {
@@ -63,16 +66,22 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
 
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (!session.user) {
         return session;
       }
 
-      session.user.id = token.sub ?? session.user.id;
-      session.user.role = (token.role as Role | undefined) ?? "USER";
+      session.user.id = token?.sub ?? user?.id ?? session.user.id;
+
+      const resolvedRole =
+        (token?.role as Role | undefined) ??
+        (user?.role as Role | undefined) ??
+        "USER";
+
+      session.user.role = resolvedRole;
       session.user.isAdmin = session.user.role === "ADMIN";
 
-      if (!session.user.email && token.email) {
+      if (!session.user.email && token?.email) {
         session.user.email = token.email;
       }
 
