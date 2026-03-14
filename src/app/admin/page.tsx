@@ -1,33 +1,20 @@
-import { FileText, Newspaper, Shield, Users } from "lucide-react";
+import { FileText, Image, Newspaper } from "lucide-react";
 
 import { StatCard } from "@/components/admin/stat-card";
+import { listMedia, listNews, listPages } from "@/lib/cms-store";
 
-const stats = [
-  { title: "Licenciés", value: "248", icon: Users },
-  { title: "Equipes", value: "12", icon: Shield },
-  { title: "Tables", value: "18", icon: FileText },
-  { title: "Actualités publiées", value: "34", icon: Newspaper },
-];
+export default async function AdminPage() {
+  const [pages, news, media] = await Promise.all([listPages(), listNews(), listMedia()]);
 
-const latestNews = [
-  "Résultats de la phase 2 publiés",
-  "Inscriptions ouvertes pour le tournoi interne",
-  "Nouvelle galerie photos du week-end",
-];
+  const latestNews = news.slice(0, 3);
+  const latestPages = pages.slice(0, 3);
 
-const latestChanges = [
-  "Page Partenaires mise à jour",
-  "Effectif équipe R1 modifié",
-  "Paramètres d'inscription ajustés",
-];
-
-export default function AdminPage() {
   return (
     <section className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
-        ))}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <StatCard title="Pages" value={String(pages.length)} icon={FileText} />
+        <StatCard title="Actualités" value={String(news.length)} icon={Newspaper} />
+        <StatCard title="Médias" value={String(media.length)} icon={Image} />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
@@ -35,21 +22,31 @@ export default function AdminPage() {
           <h2 className="text-base font-semibold">Dernières actualités</h2>
           <ul className="mt-4 space-y-2">
             {latestNews.map((item) => (
-              <li key={item} className="rounded-md border border-border bg-background px-3 py-2 text-sm">
-                {item}
+              <li key={item.id} className="rounded-md border border-border bg-background px-3 py-2 text-sm">
+                {item.title}
               </li>
             ))}
+            {latestNews.length === 0 ? (
+              <li className="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+                Aucune actualité.
+              </li>
+            ) : null}
           </ul>
         </article>
 
         <article className="rounded-lg border border-border bg-card p-5 text-card-foreground">
-          <h2 className="text-base font-semibold">Dernières modifications</h2>
+          <h2 className="text-base font-semibold">Pages récentes</h2>
           <ul className="mt-4 space-y-2">
-            {latestChanges.map((item) => (
-              <li key={item} className="rounded-md border border-border bg-background px-3 py-2 text-sm">
-                {item}
+            {latestPages.map((item) => (
+              <li key={item.id} className="rounded-md border border-border bg-background px-3 py-2 text-sm">
+                {item.title}
               </li>
             ))}
+            {latestPages.length === 0 ? (
+              <li className="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+                Aucune page.
+              </li>
+            ) : null}
           </ul>
         </article>
       </div>

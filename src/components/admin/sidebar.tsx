@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  FileText,
-  Handshake,
-  Image,
-  LayoutDashboard,
-  Newspaper,
-  Settings,
-  Shield,
-  Users,
-  X,
-} from "lucide-react";
+import { FileText, Image, LayoutDashboard, Newspaper, X } from "lucide-react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
 import { Button } from "@/components/ui/button";
@@ -19,12 +9,8 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/pages", label: "Pages", icon: FileText },
-  { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
-  { href: "/admin/galerie", label: "Galerie", icon: Image },
-  { href: "/admin/equipes", label: "Equipes", icon: Shield },
-  { href: "/admin/joueurs", label: "Joueurs", icon: Users },
-  { href: "/admin/partenaires", label: "Partenaires", icon: Handshake },
-  { href: "/admin/parametres", label: "Paramètres", icon: Settings },
+  { href: "/admin/news", label: "Actualités", icon: Newspaper },
+  { href: "/admin/media", label: "Médias", icon: Image },
 ];
 
 type SidebarProps = {
