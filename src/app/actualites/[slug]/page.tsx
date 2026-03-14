@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getNewsBySlug, mockNews } from "@/lib/mock-news";
+import { formatNewsDate, getNewsBySlug, mockNews } from "@/lib/mock-news";
 
 interface NewsArticlePageProps {
   params: Promise<{
@@ -24,12 +24,6 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
     notFound();
   }
 
-  const formattedDate = new Date(article.date).toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-
   return (
     <article className="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <Link href="/actualites" className="text-sm font-medium text-sky-700 hover:text-sky-900">
@@ -38,7 +32,7 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
 
       <header className="mt-4">
         <p className="text-sm text-slate-500">
-          {formattedDate} · {article.author}
+          {formatNewsDate(article.date)} · {article.author}
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
           {article.title}
@@ -50,8 +44,8 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
       </div>
 
       <div className="mt-6 space-y-4 text-slate-700">
-        {article.content.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
+        {article.content.map((paragraph, index) => (
+          <p key={`${article.slug}-paragraph-${index + 1}`}>{paragraph}</p>
         ))}
       </div>
     </article>

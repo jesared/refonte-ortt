@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Bilan des équipes</title>
+  <desc id="desc">Illustration abstraite pour un article de bilan sportif.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#be123c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <path d="M120 560 L280 320 L450 460 L670 220 L1040 600" stroke="#ffffff" stroke-opacity="0.55" stroke-width="28" fill="none"/>
+  <text x="80" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="70" font-weight="700">Bilan des équipes</text>
+</svg>
