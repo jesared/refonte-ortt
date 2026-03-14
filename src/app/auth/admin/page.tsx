@@ -4,7 +4,12 @@ import { LoginButton } from "@/components/login-button";
 
 const ERROR_MESSAGES: Record<string, string> = {
   auth_required: "Vous devez vous connecter avec Google pour accéder à l'administration.",
-  forbidden: "Votre compte Google n'est pas autorisé à accéder à l'administration.",
+  forbidden:
+    "Votre compte Google n'est pas autorisé à accéder à l'administration.",
+  Configuration:
+    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID et AUTH_GOOGLE_SECRET.",
+  configuration:
+    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID et AUTH_GOOGLE_SECRET.",
 };
 
 export default async function AdminLoginPage({
@@ -13,6 +18,10 @@ export default async function AdminLoginPage({
   searchParams: Promise<{ error?: string; callbackUrl?: string }>;
 }) {
   const params = await searchParams;
+  const isGoogleConfigured = Boolean(
+    process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID,
+  ) &&
+    Boolean(process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET);
   const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null;
   const callbackUrl = params.callbackUrl ?? "/admin";
 
@@ -29,8 +38,18 @@ export default async function AdminLoginPage({
         </p>
       ) : null}
 
+      {!isGoogleConfigured ? (
+        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-300">
+          La connexion Google est désactivée car les variables d&apos;environnement ne sont pas configurées.
+        </p>
+      ) : null}
+
       <div className="flex flex-wrap gap-3">
-        <LoginButton callbackUrl={callbackUrl} label="Se connecter avec Google" />
+        <LoginButton
+          callbackUrl={callbackUrl}
+          label="Se connecter avec Google"
+          disabled={!isGoogleConfigured}
+        />
         <Link href="/" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
           Retour à l&apos;accueil
         </Link>
