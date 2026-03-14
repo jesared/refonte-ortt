@@ -40,6 +40,7 @@ export function ProfileCard() {
   }
 
   const { user } = session;
+  const roleLabel = user.role === "ADMIN" ? "Administrateur" : user.role === "EDITOR" ? "Éditeur" : "Utilisateur";
 
   return (
     <Card className="space-y-4 border border-border bg-card p-4 text-foreground">
@@ -52,6 +53,7 @@ export function ProfileCard() {
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">{user.name ?? "Utilisateur"}</p>
           <p className="truncate text-xs text-muted-foreground">{user.email ?? "Email non disponible"}</p>
+          <p className="mt-1 text-[11px] uppercase tracking-wide text-muted-foreground">{roleLabel}</p>
         </div>
       </div>
 
