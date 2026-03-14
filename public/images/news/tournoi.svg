@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Tournoi régional</title>
+  <desc id="desc">Illustration abstraite pour un article de tournoi de tennis de table.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="300" cy="220" r="140" fill="#ffffff" fill-opacity="0.2"/>
+  <circle cx="910" cy="520" r="200" fill="#ffffff" fill-opacity="0.12"/>
+  <text x="80" y="690" fill="#ffffff" font-family="Arial, sans-serif" font-size="70" font-weight="700">Tournoi régional</text>
+</svg>
