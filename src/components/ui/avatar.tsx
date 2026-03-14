@@ -1,0 +1,32 @@
+import Image from "next/image";
+import type * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+export function Avatar({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("relative flex size-10 shrink-0 overflow-hidden rounded-full", className)}
+      {...props}
+    />
+  );
+}
+
+type AvatarImageProps = {
+  alt: string;
+  className?: string;
+  src: string;
+};
+
+export function AvatarImage({ className, alt, src }: AvatarImageProps) {
+  return <Image className={cn("aspect-square size-full", className)} alt={alt} src={src} width={40} height={40} />;
+}
+
+export function AvatarFallback({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}

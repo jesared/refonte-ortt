@@ -2,6 +2,7 @@
 
 import { FileText, Image, LayoutDashboard, Newspaper, X } from "lucide-react";
 
+import { ProfileCard } from "@/components/admin/profile-card";
 import { SidebarItem } from "@/components/admin/sidebar-item";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,7 @@ type SidebarProps = {
 
 function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   return (
-    <>
+    <div className="flex h-full flex-col">
       <div className="border-b border-border px-5 py-4">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Administration</p>
         <h2 className="mt-1 text-sm font-semibold text-foreground">Olympique Rémois Tennis de Table</h2>
@@ -32,7 +33,10 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
           ))}
         </ul>
       </nav>
-    </>
+      <div className="mt-auto px-3 pb-3">
+        <ProfileCard />
+      </div>
+    </div>
   );
 }
 
