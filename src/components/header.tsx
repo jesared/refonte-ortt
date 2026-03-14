@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { AuthStatusControls } from "@/components/auth-status-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
@@ -42,6 +43,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <AuthStatusControls />
             <ThemeToggle />
             <Button
               type="button"
