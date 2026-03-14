@@ -7,15 +7,23 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .map((email) => email.trim().toLowerCase())
   .filter(Boolean);
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
+const googleClientId =
+  process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret =
+  process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET;
 
-  secret: process.env.NEXTAUTH_SECRET,
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers:
+    googleClientId && googleClientSecret
+      ? [
+          Google({
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+          }),
+        ]
+      : [],
+
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
 
   session: {
@@ -23,7 +31,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") return false;
       if (!user.email) return false;
 
       const email = user.email.toLowerCase();
