@@ -22,11 +22,14 @@ type SidebarProps = {
 
 function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-5 py-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Administration</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {isAdmin ? "Administration" : "Mon espace"}
+        </p>
         <h2 className="mt-1 text-sm font-semibold text-foreground">Olympique Rémois Tennis de Table</h2>
       </div>
       <nav aria-label="Navigation principale" className="flex-1 overflow-y-auto px-3 py-4">
