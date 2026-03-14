@@ -100,7 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.email = user.email ?? session.user.email;
         session.user.name = user.name;
         session.user.image = user.image;
-        session.user.role = user.role;
+        session.user.role = user.role ?? "USER";
       }
 
       if (token.role && session.user) {
