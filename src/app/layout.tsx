@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -13,15 +14,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">
-            <div className="max-w-6xl mx-auto px-4 py-8">{children}</div>
-          </main>
-          <Footer />
-        </div>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">
+              <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
+            </main>
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

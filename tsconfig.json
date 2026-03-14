@@ -25,6 +25,15 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "next-themes": [
+        "./src/shims/next-themes"
+      ],
+      "next-themes/dist/types": [
+        "./src/shims/next-themes"
+      ],
+      "lucide-react": [
+        "./src/shims/lucide-react"
       ]
     }
   },

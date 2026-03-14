@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
@@ -22,9 +23,9 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <Link href="/" className="text-lg font-semibold text-slate-900">
+          <Link href="/" className="text-lg font-semibold text-foreground">
             Olympique Rémois Tennis de Table
           </Link>
 
@@ -33,27 +34,30 @@ export function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-sm font-medium text-slate-700 transition-colors hover:text-blue-700"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen((open) => !open)}
-            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            <span aria-hidden="true" className="text-base leading-none">
-              {isMenuOpen ? "✕" : "☰"}
-            </span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              <span aria-hidden="true" className="text-base leading-none">
+                {isMenuOpen ? "✕" : "☰"}
+              </span>
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -67,11 +71,11 @@ export function Header() {
           />
           <nav
             id="mobile-menu"
-            className="absolute right-0 top-0 flex h-dvh w-[min(85vw,20rem)] flex-col border-l border-slate-200 bg-slate-50 px-6 py-6 shadow-2xl"
+            className="absolute right-0 top-0 flex h-dvh w-[min(85vw,20rem)] flex-col border-l border-border bg-background px-6 py-6 shadow-2xl"
             aria-label="Menu mobile"
           >
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-base font-semibold text-slate-900">Menu</p>
+              <p className="text-base font-semibold text-foreground">Menu</p>
               <Button
                 type="button"
                 variant="outline"
@@ -92,7 +96,7 @@ export function Header() {
                   key={item.label}
                   href={item.href}
                   onClick={closeMenu}
-                  className="text-sm font-medium text-slate-700 transition-colors hover:text-blue-700"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                 >
                   {item.label}
                 </Link>
