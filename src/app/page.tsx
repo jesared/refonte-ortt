@@ -5,6 +5,7 @@ import { JoinCtaSection } from "@/components/home/join-cta-section";
 import { LatestNewsSection } from "@/components/home/latest-news-section";
 import { UpcomingEventsSection } from "@/components/home/upcoming-events-section";
 import { Hero } from "@/components/hero";
+import { LoginButton } from "@/components/login-button";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
@@ -22,6 +23,7 @@ export default function HomePage() {
             <Link href="/contact">
               <Button variant="secondary">Nous contacter</Button>
             </Link>
+            <LoginButton />
           </>
         }
       />
