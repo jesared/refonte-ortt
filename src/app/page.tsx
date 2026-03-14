@@ -37,7 +37,7 @@ function ArrowRightIcon() {
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center px-6 py-16 text-center">
+    <section className="flex min-h-[60vh] w-full flex-col items-center justify-center py-16 text-center">
       <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
         <TrophyIcon />
         Olympique Rémois Tennis de Table
@@ -55,6 +55,6 @@ export default function HomePage() {
         Découvrir le club
         <ArrowRightIcon />
       </Button>
-    </main>
+    </section>
   );
 }

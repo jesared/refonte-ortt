@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -12,7 +14,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased bg-slate-50 text-slate-900">
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <div className="max-w-6xl mx-auto px-4 py-8">{children}</div>
+          </main>
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
