@@ -9,14 +9,19 @@ import { Button } from "@/components/ui/button";
 type LoginButtonProps = {
   callbackUrl?: string;
   label?: string;
+  disabled?: boolean;
 };
 
-export function LoginButton({ callbackUrl, label = "Connexion administrateur" }: LoginButtonProps) {
+export function LoginButton({
+  callbackUrl,
+  label = "Connexion administrateur",
+  disabled = false,
+}: LoginButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (isLoading) return;
+    if (isLoading || disabled) return;
 
     setIsLoading(true);
 
@@ -40,7 +45,7 @@ export function LoginButton({ callbackUrl, label = "Connexion administrateur" }:
   };
 
   return (
-    <Button type="button" onClick={handleLogin} disabled={isLoading}>
+    <Button type="button" onClick={handleLogin} disabled={isLoading || disabled}>
       {isLoading ? "Connexion..." : label}
     </Button>
   );
