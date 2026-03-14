@@ -7,9 +7,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   forbidden:
     "Votre compte Google n'est pas autorisé à accéder à l'administration.",
   Configuration:
-    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID et AUTH_GOOGLE_SECRET.",
+    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID/AUTH_GOOGLE_SECRET (ou GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET) dans l'environnement de déploiement.",
   configuration:
-    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID et AUTH_GOOGLE_SECRET.",
+    "La connexion Google n'est pas configurée côté serveur. Vérifiez AUTH_GOOGLE_ID/AUTH_GOOGLE_SECRET (ou GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET) dans l'environnement de déploiement.",
 };
 
 export default async function AdminLoginPage({
@@ -40,7 +40,7 @@ export default async function AdminLoginPage({
 
       {!isGoogleConfigured ? (
         <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-300">
-          La connexion Google est désactivée car les variables d&apos;environnement ne sont pas configurées.
+          La connexion Google est désactivée car les variables d&apos;environnement ne sont pas configurées. Définissez AUTH_GOOGLE_ID + AUTH_GOOGLE_SECRET (ou GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET) puis redéployez le serveur.
         </p>
       ) : null}
 
