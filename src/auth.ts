@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
 
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
 
   callbacks: {
@@ -45,8 +45,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!user.email) return false;
 
       const email = user.email.toLowerCase();
-      const isAdmin = adminEmails.includes(email);
-      const role: Role = isAdmin ? "ADMIN" : "USER";
+      const existingUser = await prisma.user.findUnique({
+        where: { email },
+        select: { role: true },
+      });
+
+      const role: Role = adminEmails.includes(email)
+        ? "ADMIN"
+        : existingUser?.role ?? "USER";
 
       await prisma.user.upsert({
         where: { email },
@@ -73,38 +79,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.sub = user.id;
       }
 
-      if (!token.sub && token.email) {
-        const dbUserByEmail = await prisma.user.findUnique({
-          where: { email: token.email.toLowerCase() },
-          select: { id: true },
-        });
-
-        token.sub = dbUserByEmail?.id;
+      if (user?.email) {
+        token.email = user.email.toLowerCase();
       }
 
-      if (token.sub) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
-          select: { role: true },
-        });
+      let dbUser: { id: string; email: string; role: Role } | null = null;
 
-        token.role = dbUser?.role ?? "USER";
+      if (token.sub) {
+        dbUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { id: true, email: true, role: true },
+        });
+      }
+
+      if (!dbUser && token.email) {
+        dbUser = await prisma.user.findUnique({
+          where: { email: token.email.toLowerCase() },
+          select: { id: true, email: true, role: true },
+        });
+      }
+
+      if (dbUser) {
+        token.sub = dbUser.id;
+        token.email = dbUser.email;
+        token.role = dbUser.role;
+      } else {
+        token.role = (token.role as Role | undefined) ?? "USER";
       }
 
       return token;
     },
 
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = user.id;
-        session.user.email = user.email ?? session.user.email;
-        session.user.name = user.name;
-        session.user.image = user.image;
-        session.user.role = user.role ?? "USER";
-      }
-
-      if (token.role && session.user) {
-        session.user.role = token.role;
+        session.user.id = token.sub ?? "";
+        session.user.email = token.email ?? session.user.email;
+        session.user.role = (token.role as Role | undefined) ?? "USER";
+        session.user.isAdmin = session.user.role === "ADMIN";
       }
 
       return session;
