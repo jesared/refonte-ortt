@@ -1,4 +1,6 @@
+import { NewsCard } from "@/components/news-card";
 import { PageHeader } from "@/components/page-header";
+import { mockNews } from "@/lib/mock-news";
 
 export default function ActualitesPage() {
   return (
@@ -8,8 +10,10 @@ export default function ActualitesPage() {
         description="Retrouvez les dernières nouvelles du club, les annonces et les événements à venir."
       />
 
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
-        Contenu des actualités à venir : articles, photos et publications des temps forts du club.
+      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {mockNews.map((article) => (
+          <NewsCard key={article.slug} article={article} />
+        ))}
       </div>
     </section>
   );
