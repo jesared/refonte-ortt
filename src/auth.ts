@@ -1,8 +1,8 @@
 import { PrismaAdapter } from "@/lib/auth-prisma-adapter";
+import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
-import { prisma } from "@/lib/prisma";
 
 const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .split(",")
@@ -28,6 +28,7 @@ export const authConfig: NextAuthConfig = {
           Google({
             clientId: googleClientId,
             clientSecret: googleClientSecret,
+            allowDangerousEmailAccountLinking: true,
           }),
         ]
       : [],
@@ -41,73 +42,64 @@ export const authConfig: NextAuthConfig = {
   trustHost: true,
 
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
 
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "google") return false;
-      if (!user.email) return false;
-
-      const email = user.email.toLowerCase();
-      const existingUser = await prisma.user.findUnique({
-        where: { email },
-        select: { id: true, role: true },
-      });
-
-      const adminRole: Role = adminEmails.includes(email) ? "ADMIN" : "USER";
-
-      if (existingUser) {
-        await prisma.user.update({
-          where: { id: existingUser.id },
-          data: {
-            name: user.name,
-            image: user.image,
-          },
-        });
-      } else {
-        await prisma.user.create({
-          data: {
-            email,
-            name: user.name,
-            image: user.image,
-            role: adminRole,
-          },
-        });
-      }
-
-      return true;
+      return Boolean(user.email);
     },
 
-    async jwt({ token }) {
-      if (token.sub) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
-          select: { role: true },
-        });
-
-        token.role = dbUser?.role ?? token.role ?? "USER";
+    async jwt({ token, user }) {
+      if (user?.id) {
+        token.sub = user.id;
       }
 
+      const userId = token.sub;
+      if (!userId) {
+        token.role = (token.role as Role | undefined) ?? "USER";
+        return token;
+      }
+
+      const dbUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true },
+      });
+
+      token.role = dbUser?.role ?? "USER";
       return token;
     },
 
-    async session({ session, user, token }) {
+    async session({ session, token }) {
       if (!session.user) {
         return session;
       }
 
-      session.user.id = user.id;
-      session.user.email = user.email ?? session.user.email;
-      session.user.role = (user.role as Role | undefined) ?? "USER";
+      session.user.id = token.sub ?? session.user.id;
+      session.user.role = (token.role as Role | undefined) ?? "USER";
       session.user.isAdmin = session.user.role === "ADMIN";
 
-      if (!session.user.role) {
-        session.user.role = (token.role as Role | undefined) ?? "USER";
-        session.user.isAdmin = session.user.role === "ADMIN";
+      if (!session.user.email && token.email) {
+        session.user.email = token.email;
       }
 
       return session;
+    },
+  },
+
+  events: {
+    async createUser({ user }) {
+      if (!user.email) return;
+
+      const role: Role = adminEmails.includes(user.email.toLowerCase())
+        ? "ADMIN"
+        : "USER";
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { role },
+      });
     },
   },
 };
