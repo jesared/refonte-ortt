@@ -1,18 +1,14 @@
-import { PrismaAdapter } from "@/lib/auth-prisma-adapter";
-import { prisma } from "@/lib/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Role } from "@prisma/client";
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
+
+import { prisma } from "@/lib/prisma";
 
 const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .split(",")
   .map((email) => email.trim().toLowerCase())
   .filter(Boolean);
-
-const googleClientId =
-  process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
-const googleClientSecret =
-  process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET;
 
 const authSecret =
   process.env.AUTH_SECRET ??
@@ -22,16 +18,13 @@ const authSecret =
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
 
-  providers:
-    googleClientId && googleClientSecret
-      ? [
-          Google({
-            clientId: googleClientId,
-            clientSecret: googleClientSecret,
-            allowDangerousEmailAccountLinking: true,
-          }),
-        ]
-      : [],
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      allowDangerousEmailAccountLinking: true,
+    }),
+  ],
 
   pages: {
     signIn: "/auth/admin",
@@ -51,23 +44,22 @@ export const authConfig: NextAuthConfig = {
       return Boolean(user.email);
     },
 
-    async jwt({ token, user }) {
-      if (user?.id) {
-        token.sub = user.id;
-      }
-
-      const userId = token.sub;
-      if (!userId) {
+    async jwt({ token }) {
+      if (!token.email) {
         token.role = (token.role as Role | undefined) ?? "USER";
         return token;
       }
 
-      const dbUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { role: true },
+      const user = await prisma.user.findUnique({
+        where: { email: token.email },
+        select: { id: true, role: true },
       });
 
-      token.role = dbUser?.role ?? "USER";
+      if (user?.id) {
+        token.sub = user.id;
+      }
+
+      token.role = user?.role ?? "USER";
       return token;
     },
 
