@@ -1,4 +1,4 @@
-import { HomeSection } from "@/components/home/home-section";
+import { Section } from "@/components/section";
 
 const highlights = [
   { label: "Licenciés", value: "150+" },
@@ -9,7 +9,7 @@ const highlights = [
 
 export function ClubPresentationSection() {
   return (
-    <HomeSection
+    <Section
       eyebrow="Le club"
       title="Un club convivial et ambitieux"
       description="Depuis plusieurs décennies, l'ORTT accompagne les jeunes et les adultes dans la pratique du tennis de table, en loisir comme en compétition."
@@ -27,6 +27,6 @@ export function ClubPresentationSection() {
           ))}
         </dl>
       </div>
-    </HomeSection>
+    </Section>
   );
 }

@@ -2,14 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatNewsDate, type NewsArticle } from "@/lib/mock-news";
+import { cn } from "@/lib/utils";
 
 interface NewsCardProps {
   article: NewsArticle;
+  className?: string;
 }
 
-export function NewsCard({ article }: NewsCardProps) {
+export function NewsCard({ article, className }: NewsCardProps) {
   return (
-    <article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+    <article
+      className={cn(
+        "overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
+        className,
+      )}
+    >
       <Link href={`/actualites/${article.slug}`} className="block">
         <div className="relative h-48 w-full">
           <Image src={article.image} alt={article.title} fill className="object-cover" />

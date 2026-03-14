@@ -1,13 +1,32 @@
+import Link from "next/link";
+
 import { ClubPresentationSection } from "@/components/home/club-presentation-section";
-import { HeroSection } from "@/components/home/hero-section";
 import { JoinCtaSection } from "@/components/home/join-cta-section";
 import { LatestNewsSection } from "@/components/home/latest-news-section";
 import { UpcomingEventsSection } from "@/components/home/upcoming-events-section";
+import { Hero } from "@/components/hero";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   return (
     <div className="space-y-8">
-      <HeroSection />
+      <Hero
+        eyebrow="Olympique Rémois Tennis de Table"
+        title="Le club de tennis de table de Reims pour jouer, progresser et partager."
+        description="Découvrez la vie du club, suivez nos équipes et rejoignez une communauté passionnée ouverte à tous les niveaux."
+        actions={
+          <>
+            <Link href="/entrainements">
+              <Button className="bg-white text-blue-800 hover:bg-blue-100">Découvrir les entraînements</Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline" className="border-white/60 bg-white/10 text-white hover:bg-white/20">
+                Nous contacter
+              </Button>
+            </Link>
+          </>
+        }
+      />
       <ClubPresentationSection />
       <LatestNewsSection />
       <UpcomingEventsSection />

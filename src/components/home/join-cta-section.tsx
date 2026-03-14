@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { HomeSection } from "@/components/home/home-section";
+import { Section } from "@/components/section";
 import { Button } from "@/components/ui/button";
 
 export function JoinCtaSection() {
   return (
-    <HomeSection
+    <Section
       eyebrow="Rejoindre l'ORTT"
       title="Envie de rejoindre le club ?"
       description="Que vous soyez débutant, joueur confirmé ou parent d&apos;un jeune pongiste, nous serons ravis de vous accueillir."
@@ -26,6 +26,6 @@ export function JoinCtaSection() {
           </Link>
         </div>
       </div>
-    </HomeSection>
+    </Section>
   );
 }

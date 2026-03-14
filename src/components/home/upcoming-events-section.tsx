@@ -1,4 +1,4 @@
-import { HomeSection } from "@/components/home/home-section";
+import { Section } from "@/components/section";
 
 const upcomingEvents = [
   { date: "18 Avril", title: "Stage jeunes vacances", place: "Gymnase Vernouillet" },
@@ -8,7 +8,7 @@ const upcomingEvents = [
 
 export function UpcomingEventsSection() {
   return (
-    <HomeSection
+    <Section
       eyebrow="Agenda"
       title="Prochains événements"
       description="Inscrivez ces dates dans votre calendrier pour ne rien manquer de la saison."
@@ -24,6 +24,6 @@ export function UpcomingEventsSection() {
           </li>
         ))}
       </ul>
-    </HomeSection>
+    </Section>
   );
 }
