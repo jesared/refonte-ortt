@@ -1,7 +1,6 @@
 import { FileText, Image, Newspaper } from "lucide-react";
 
 import { auth } from "@/auth";
-import { LogoutButton } from "@/components/logout-button";
 import { StatCard } from "@/components/admin/stat-card";
 import { listMedia, listNews, listPages } from "@/lib/cms-store";
 
@@ -14,14 +13,13 @@ export default async function AdminPage() {
 
   return (
     <section className="space-y-6">
-      <article className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-card p-5 text-card-foreground">
+      <article className="rounded-lg border border-border bg-card p-5 text-card-foreground">
         <div>
           <h1 className="text-lg font-semibold">Espace administrateur</h1>
           <p className="text-sm text-muted-foreground">
             Connecté avec : <span className="font-medium">{session?.user?.email ?? "email inconnu"}</span>
           </p>
         </div>
-        <LogoutButton />
       </article>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
