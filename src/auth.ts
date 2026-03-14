@@ -1,7 +1,8 @@
+import { PrismaAdapter } from "@/lib/auth-prisma-adapter";
 import { Role } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
+import { prisma } from "@/lib/prisma";
 
 const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .split(",")
@@ -18,7 +19,9 @@ const authSecret =
   process.env.NEXTAUTH_SECRET ??
   (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authConfig: NextAuthConfig = {
+  adapter: PrismaAdapter(prisma),
+
   providers:
     googleClientId && googleClientSecret
       ? [
@@ -38,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
 
   session: {
-    strategy: "jwt",
+    strategy: "database",
   },
 
   callbacks: {
@@ -49,71 +52,57 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const email = user.email.toLowerCase();
       const existingUser = await prisma.user.findUnique({
         where: { email },
-        select: { role: true },
+        select: { id: true, role: true },
       });
 
-      const role: Role = adminEmails.includes(email)
-        ? "ADMIN"
-        : existingUser?.role ?? "USER";
+      const adminRole: Role = adminEmails.includes(email) ? "ADMIN" : "USER";
 
-      await prisma.user.upsert({
-        where: { email },
-        update: {
-          name: user.name,
-          image: user.image,
-          role,
-        },
-        create: {
-          email,
-          name: user.name,
-          image: user.image,
-          role,
-        },
-      });
+      if (existingUser) {
+        await prisma.user.update({
+          where: { id: existingUser.id },
+          data: {
+            name: user.name,
+            image: user.image,
+          },
+        });
+      } else {
+        await prisma.user.create({
+          data: {
+            email,
+            name: user.name,
+            image: user.image,
+            role: adminRole,
+          },
+        });
+      }
 
       return true;
     },
 
-    async jwt({ token, user }) {
-      if (user?.id) {
-        token.sub = user.id;
-      }
-
-      if (user?.email) {
-        token.email = user.email.toLowerCase();
-      }
-
-      let dbUser: { id: string; email: string; role: Role } | null = null;
-
+    async jwt({ token }) {
       if (token.sub) {
-        dbUser = await prisma.user.findUnique({
+        const dbUser = await prisma.user.findUnique({
           where: { id: token.sub },
-          select: { id: true, email: true, role: true },
+          select: { role: true },
         });
-      }
 
-      if (!dbUser && token.email) {
-        dbUser = await prisma.user.findUnique({
-          where: { email: token.email.toLowerCase() },
-          select: { id: true, email: true, role: true },
-        });
-      }
-
-      if (dbUser) {
-        token.sub = dbUser.id;
-        token.email = dbUser.email;
-        token.role = dbUser.role;
-      } else {
-        token.role = (token.role as Role | undefined) ?? "USER";
+        token.role = dbUser?.role ?? token.role ?? "USER";
       }
 
       return token;
     },
 
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub ?? "";
-        session.user.email = token.email ?? session.user.email;
+    async session({ session, user, token }) {
+      if (!session.user) {
+        return session;
+      }
+
+      session.user.id = user.id;
+      session.user.email = user.email ?? session.user.email;
+      session.user.role = (user.role as Role | undefined) ?? "USER";
+      session.user.isAdmin = session.user.role === "ADMIN";
+
+      if (!session.user.role) {
         session.user.role = (token.role as Role | undefined) ?? "USER";
         session.user.isAdmin = session.user.role === "ADMIN";
       }
@@ -121,4 +110,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
