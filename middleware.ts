@@ -1,27 +1,21 @@
-import { getToken } from "next-auth/jwt";
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-const SIGN_IN_PATH = "/api/auth/signin";
+export default auth((req) => {
+  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
 
-export async function middleware(request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-
-  if (!token) {
-    const signInUrl = new URL(SIGN_IN_PATH, request.url);
-    signInUrl.searchParams.set(
-      "callbackUrl",
-      `${request.nextUrl.pathname}${request.nextUrl.search}`,
-    );
-
+  if (isAdminRoute && !req.auth) {
+    const signInUrl = new URL("/api/auth/signin", req.url);
+    signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(signInUrl);
   }
 
+  if (isAdminRoute && !req.auth?.user?.isAdmin) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/admin/:path*"],

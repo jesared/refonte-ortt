@@ -16,7 +16,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   secret: process.env.NEXTAUTH_SECRET,
-
   trustHost: true,
 
   session: {
@@ -28,7 +27,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!user.email) return false;
 
       const email = user.email.toLowerCase();
-
       const isAdmin = adminEmails.includes(email);
 
       await prisma.user.upsert({
@@ -50,11 +48,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token, user }) {
-      const email = (user?.email ?? token.email)?.toLowerCase();
+      // Première connexion
+      if (user?.email) {
+        token.email = user.email.toLowerCase();
+      }
 
-      if (email) {
+      if (token.email) {
         const dbUser = await prisma.user.findUnique({
-          where: { email },
+          where: { email: token.email },
         });
 
         token.isAdmin = dbUser?.role === "ADMIN";
