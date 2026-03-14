@@ -1,8 +1,8 @@
 "use client";
 
-import { FileText, Image, LayoutDashboard, Newspaper, X } from "lucide-react";
+import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
-import { ProfileCard } from "@/components/admin/profile-card";
 import { SidebarItem } from "@/components/admin/sidebar-item";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ const navigation = [
   { href: "/admin/pages", label: "Pages", icon: FileText },
   { href: "/admin/news", label: "Actualités", icon: Newspaper },
   { href: "/admin/media", label: "Médias", icon: Image },
+  { href: "/admin/users", label: "Utilisateurs", icon: Users },
 ];
 
 type SidebarProps = {
@@ -20,6 +21,8 @@ type SidebarProps = {
 };
 
 function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
+  const { data: session } = useSession();
+
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border px-5 py-4">
@@ -33,8 +36,27 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
           ))}
         </ul>
       </nav>
-      <div className="mt-auto px-3 pb-3">
-        <ProfileCard />
+      <div className="mt-auto border-t border-border px-3 py-3">
+        <p className="mb-3 truncate px-3 text-xs font-medium text-muted-foreground">
+          {session?.user?.email ?? "Utilisateur non connecté"}
+        </p>
+        <ul className="space-y-1">
+          <SidebarItem href="/admin/profile" label="Profil" icon={Shield} onClick={onCloseMobile} />
+          <li>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+              onClick={() => {
+                onCloseMobile?.();
+                signOut({ callbackUrl: "/" });
+              }}
+            >
+              <LogOut className="size-4 shrink-0" />
+              <span>Déconnexion</span>
+            </Button>
+          </li>
+        </ul>
       </div>
     </div>
   );

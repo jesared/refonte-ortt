@@ -13,6 +13,8 @@ const TITLES: Record<string, string> = {
   "/admin/pages": "Pages",
   "/admin/news": "Actualités",
   "/admin/media": "Médias",
+  "/admin/users": "Utilisateurs",
+  "/admin/profile": "Profil",
 };
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
