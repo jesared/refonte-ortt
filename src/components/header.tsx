@@ -65,7 +65,7 @@ export function Header() {
         <div className="fixed inset-0 z-50 md:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1px]"
+            className="absolute inset-0 bg-background/70 backdrop-blur-[1px]"
             onClick={closeMenu}
             aria-label="Fermer le menu mobile"
           />

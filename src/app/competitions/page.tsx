@@ -8,7 +8,7 @@ export default function CompetitionsPage() {
         description="Suivez les équipes engagées, les calendriers et les résultats des compétitions."
       />
 
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
+      <div className="rounded-xl border border-dashed border-border bg-card p-6 text-muted-foreground">
         Contenu des compétitions à venir : calendrier des rencontres, classements et comptes-rendus.
       </div>
     </section>

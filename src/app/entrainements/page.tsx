@@ -8,7 +8,7 @@ export default function EntrainementsPage() {
         description="Consultez les créneaux, les groupes de niveaux et les informations d'encadrement."
       />
 
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
+      <div className="rounded-xl border border-dashed border-border bg-card p-6 text-muted-foreground">
         Contenu des entraînements à venir : planning hebdomadaire, tarifs et modalités d&apos;inscription.
       </div>
     </section>

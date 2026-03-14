@@ -8,7 +8,7 @@ export default function TournoiPage() {
         description="Informations officielles du tournoi du club : format, inscriptions et déroulé."
       />
 
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
+      <div className="rounded-xl border border-dashed border-border bg-card p-6 text-muted-foreground">
         Contenu du tournoi à venir : règlement, programme de la journée et suivi des tableaux.
       </div>
     </section>

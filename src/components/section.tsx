@@ -8,7 +8,7 @@ interface SectionProps {
   description?: string;
   children: ReactNode;
   className?: string;
-  tone?: "light" | "dark";
+  tone?: "default" | "muted";
 }
 
 export function Section({
@@ -17,28 +17,26 @@ export function Section({
   description,
   children,
   className,
-  tone = "light",
+  tone = "default",
 }: SectionProps) {
-  const isDark = tone === "dark";
+  const isMuted = tone === "muted";
 
   return (
     <section
       className={cn(
-        "rounded-2xl border p-6 shadow-sm sm:p-8",
-        isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white",
+        "rounded-2xl border border-border p-6 shadow-sm sm:p-8",
+        isMuted ? "bg-muted" : "bg-card text-card-foreground",
         className,
       )}
     >
       <header className="mb-6">
         {eyebrow ? (
-          <p className={cn("text-xs font-semibold uppercase tracking-[0.16em]", isDark ? "text-blue-300" : "text-blue-700")}>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className={cn("mt-2 text-2xl font-bold sm:text-3xl", isDark ? "text-white" : "text-slate-900")}>{title}</h2>
-        {description ? (
-          <p className={cn("mt-2 max-w-3xl", isDark ? "text-slate-200" : "text-slate-600")}>{description}</p>
-        ) : null}
+        <h2 className="mt-2 text-2xl font-bold sm:text-3xl">{title}</h2>
+        {description ? <p className="mt-2 max-w-3xl text-muted-foreground">{description}</p> : null}
       </header>
       {children}
     </section>

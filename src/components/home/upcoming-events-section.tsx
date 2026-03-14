@@ -15,12 +15,12 @@ export function UpcomingEventsSection() {
     >
       <ul className="space-y-3">
         {upcomingEvents.map((event) => (
-          <li key={`${event.date}-${event.title}`} className="flex flex-col gap-1 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <li key={`${event.date}-${event.title}`} className="flex flex-col gap-1 rounded-lg border border-border bg-background p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-blue-700">{event.date}</p>
-              <p className="text-slate-900">{event.title}</p>
+              <p className="text-sm font-semibold text-primary">{event.date}</p>
+              <p>{event.title}</p>
             </div>
-            <p className="text-sm text-slate-600">{event.place}</p>
+            <p className="text-sm text-muted-foreground">{event.place}</p>
           </li>
         ))}
       </ul>
