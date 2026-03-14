@@ -1,8 +1,12 @@
-import { Role } from "@prisma/client";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { prisma } from "@/lib/prisma";
+
+const ROLES = {
+  ADMIN: "ADMIN",
+  USER: "USER",
+} as const;
 
 const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .split(",")
@@ -29,7 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return false;
       }
 
-      const role = adminEmails.includes(email) ? Role.ADMIN : Role.USER;
+      const role = adminEmails.includes(email) ? ROLES.ADMIN : ROLES.USER;
 
       await prisma.user.upsert({
         where: { email },
@@ -62,16 +66,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         select: { role: true },
       });
 
-      token.role = dbUser?.role ?? Role.USER;
-      token.isAdmin = token.role === Role.ADMIN;
+      token.role = dbUser?.role ?? ROLES.USER;
+      token.isAdmin = token.role === ROLES.ADMIN;
 
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.email = token.email ?? session.user.email;
-        session.user.role = token.role ?? Role.USER;
-        session.user.isAdmin = token.role === Role.ADMIN;
+        session.user.role = token.role ?? ROLES.USER;
+        session.user.isAdmin = token.role === ROLES.ADMIN;
       }
 
       return session;
