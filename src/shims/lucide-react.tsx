@@ -139,3 +139,49 @@ export function Settings(props: LucideProps) {
     </BaseIcon>
   );
 }
+
+export function Bell(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M10.27 21a2 2 0 0 0 3.46 0" />
+      <path d="M4 16h16" />
+      <path d="M6 16V11a6 6 0 1 1 12 0v5" />
+    </BaseIcon>
+  );
+}
+
+export function Search(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </BaseIcon>
+  );
+}
+
+export function X(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </BaseIcon>
+  );
+}
+
+export function Image(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="9" cy="9" r="1.5" />
+      <path d="m21 15-4-4-7 7" />
+    </BaseIcon>
+  );
+}
+
+export function Shield(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M12 3 5 6v6c0 5 3.5 7.5 7 9 3.5-1.5 7-4 7-9V6z" />
+    </BaseIcon>
+  );
+}
