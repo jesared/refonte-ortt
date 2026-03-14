@@ -185,3 +185,23 @@ export function Shield(props: LucideProps) {
     </BaseIcon>
   );
 }
+
+export function LogIn(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+      <path d="M10 17l5-5-5-5" />
+      <path d="M15 12H3" />
+    </BaseIcon>
+  );
+}
+
+export function LogOut(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M14 17l5-5-5-5" />
+      <path d="M19 12H9" />
+    </BaseIcon>
+  );
+}
