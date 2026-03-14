@@ -6,13 +6,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { label: "Accueil", href: "#accueil" },
-  { label: "Le Club", href: "#le-club" },
-  { label: "Compétitions", href: "#competitions" },
-  { label: "Entrainements", href: "#entrainements" },
-  { label: "Actualités", href: "#actualites" },
-  { label: "Tournoi", href: "#tournoi" },
-  { label: "Contact", href: "#contact" },
+  { label: "Accueil", href: "/" },
+  { label: "Le Club", href: "/club" },
+  { label: "Compétitions", href: "/competitions" },
+  { label: "Entrainements", href: "/entrainements" },
+  { label: "Actualités", href: "/actualites" },
+  { label: "Tournoi", href: "/tournoi" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Header() {
@@ -24,7 +24,7 @@ export function Header() {
     <>
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <Link href="#accueil" className="text-lg font-semibold text-slate-900">
+          <Link href="/" className="text-lg font-semibold text-slate-900">
             Olympique Rémois Tennis de Table
           </Link>
 
