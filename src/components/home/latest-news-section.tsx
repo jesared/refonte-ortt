@@ -19,7 +19,7 @@ export function LatestNewsSection() {
         ))}
       </div>
       <div className="mt-5">
-        <Link href="/actualites" className="text-sm font-semibold text-blue-700 hover:text-blue-900">
+        <Link href="/actualites" className="text-sm font-semibold text-primary transition-colors hover:opacity-80">
           Voir toutes les actualités →
         </Link>
       </div>

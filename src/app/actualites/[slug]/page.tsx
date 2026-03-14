@@ -25,16 +25,16 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
   }
 
   return (
-    <article className="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <Link href="/actualites" className="text-sm font-medium text-sky-700 hover:text-sky-900">
+    <article className="mx-auto max-w-4xl rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm sm:p-8">
+      <Link href="/actualites" className="text-sm font-medium text-primary transition-colors hover:opacity-80">
         ← Retour aux actualités
       </Link>
 
       <header className="mt-4">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           {formatNewsDate(article.date)} · {article.author}
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
           {article.title}
         </h1>
       </header>
@@ -43,7 +43,7 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
         <Image src={article.image} alt={article.title} fill className="object-cover" priority />
       </div>
 
-      <div className="mt-6 space-y-4 text-slate-700">
+      <div className="mt-6 space-y-4 text-muted-foreground">
         {article.content.map((paragraph, index) => (
           <p key={`${article.slug}-paragraph-${index + 1}`}>{paragraph}</p>
         ))}

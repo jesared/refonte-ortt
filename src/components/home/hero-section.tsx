@@ -12,12 +12,10 @@ export function HeroSection() {
       actions={
         <>
           <Link href="/entrainements">
-            <Button className="bg-white text-blue-800 hover:bg-blue-100">Découvrir les entraînements</Button>
+            <Button>Découvrir les entraînements</Button>
           </Link>
           <Link href="/contact">
-            <Button variant="outline" className="border-white/60 bg-white/10 text-white hover:bg-white/20">
-              Nous contacter
-            </Button>
+            <Button variant="secondary">Nous contacter</Button>
           </Link>
         </>
       }

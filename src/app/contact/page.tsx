@@ -8,7 +8,7 @@ export default function ContactPage() {
         description="Une question ? Contactez l'Olympique Rémois Tennis de Table pour toute demande d'information."
       />
 
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
+      <div className="rounded-xl border border-dashed border-border bg-card p-6 text-muted-foreground">
         Contenu de contact à venir : coordonnées du club, formulaire de contact et informations pratiques.
       </div>
     </section>
