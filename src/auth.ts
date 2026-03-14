@@ -1,4 +1,3 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import NextAuth from "next-auth";
@@ -14,9 +13,12 @@ const googleClientId =
 const googleClientSecret =
   process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET;
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+const authSecret =
+  process.env.AUTH_SECRET ??
+  process.env.NEXTAUTH_SECRET ??
+  (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
 
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers:
     googleClientId && googleClientSecret
       ? [
@@ -32,7 +34,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/auth/admin",
   },
 
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   trustHost: true,
 
   session: {
@@ -60,14 +62,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           image: user.image,
           role,
-          emailVerified: new Date(),
         },
         create: {
           email,
           name: user.name,
           image: user.image,
           role,
-          emailVerified: new Date(),
         },
       });
 
