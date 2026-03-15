@@ -17,7 +17,7 @@ export function AuthStatusControls() {
     setIsSubmitting(true);
 
     try {
-      const callbackUrl = "/user";
+      const callbackUrl = "/auth/redirect";
       const result = await signIn("google", {
         callbackUrl,
         redirect: false,

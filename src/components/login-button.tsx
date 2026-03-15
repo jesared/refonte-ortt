@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 
@@ -18,6 +18,7 @@ export function LoginButton({
   disabled = false,
 }: LoginButtonProps) {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -26,7 +27,7 @@ export function LoginButton({
     setIsLoading(true);
 
     try {
-      const redirectTo = callbackUrl ?? "/admin";
+      const redirectTo = callbackUrl ?? "/auth/redirect";
       const result = await signIn("google", {
         callbackUrl: redirectTo,
         redirect: false,
@@ -43,6 +44,18 @@ export function LoginButton({
       setIsLoading(false);
     }
   };
+
+  if (status === "loading") {
+    return (
+      <Button type="button" disabled>
+        Chargement...
+      </Button>
+    );
+  }
+
+  if (session?.user) {
+    return null;
+  }
 
   return (
     <Button type="button" onClick={handleLogin} disabled={isLoading || disabled}>
