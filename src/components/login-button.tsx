@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
-
 import { Button } from "@/components/ui/button";
+import { signIn, useSession } from "next-auth/react";
 
 type LoginButtonProps = {
   callbackUrl?: string;
@@ -13,37 +10,11 @@ type LoginButtonProps = {
 };
 
 export function LoginButton({
-  callbackUrl,
+  callbackUrl = "/admin",
   label = "Connexion administrateur",
   disabled = false,
 }: LoginButtonProps) {
-  const router = useRouter();
   const { data: session, status } = useSession();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = async () => {
-    if (isLoading || disabled) return;
-
-    setIsLoading(true);
-
-    try {
-      const redirectTo = callbackUrl ?? "/auth/redirect";
-      const result = await signIn("google", {
-        callbackUrl: redirectTo,
-        redirect: false,
-      });
-
-      if (result?.url) {
-        router.push(result.url);
-      } else {
-        router.push(redirectTo);
-      }
-
-      router.refresh();
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (status === "loading") {
     return (
@@ -58,8 +29,16 @@ export function LoginButton({
   }
 
   return (
-    <Button type="button" onClick={handleLogin} disabled={isLoading || disabled}>
-      {isLoading ? "Connexion..." : label}
+    <Button
+      type="button"
+      disabled={disabled}
+      onClick={() =>
+        signIn("google", {
+          callbackUrl,
+        })
+      }
+    >
+      {label}
     </Button>
   );
 }
