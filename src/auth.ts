@@ -15,9 +15,6 @@ const authSecret =
   process.env.NEXTAUTH_SECRET ??
   (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
 
-const sessionStrategy =
-  process.env.AUTH_SESSION_STRATEGY === "database" ? "database" : "jwt";
-
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
 
@@ -38,52 +35,43 @@ export const authConfig: NextAuthConfig = {
   trustHost: true,
 
   session: {
-    strategy: sessionStrategy,
+    strategy: "jwt",
   },
 
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "google") return false;
-      return Boolean(user.email);
+      if (!user.email) return false;
+      return true;
     },
 
     async jwt({ token }) {
-      if (!token.email) {
-        token.role = (token.role as Role | undefined) ?? "USER";
-        return token;
-      }
+      if (!token.email) return token;
 
-      const user = await prisma.user.findUnique({
+      const dbUser = await prisma.user.findUnique({
         where: { email: token.email },
-        select: { id: true, role: true },
+        select: {
+          id: true,
+          role: true,
+        },
       });
 
-      if (user?.id) {
-        token.sub = user.id;
+      if (dbUser) {
+        token.sub = dbUser.id;
+        token.role = dbUser.role;
+      } else {
+        token.role = "USER";
       }
 
-      token.role = user?.role ?? "USER";
       return token;
     },
 
-    async session({ session, token, user }) {
-      if (!session.user) {
-        return session;
-      }
+    async session({ session, token }) {
+      if (!session.user) return session;
 
-      session.user.id = token?.sub ?? user?.id ?? session.user.id;
-
-      const resolvedRole =
-        (token?.role as Role | undefined) ??
-        (user?.role as Role | undefined) ??
-        "USER";
-
-      session.user.role = resolvedRole;
+      session.user.id = token.sub as string;
+      session.user.role = (token.role as Role) ?? "USER";
       session.user.isAdmin = session.user.role === "ADMIN";
-
-      if (!session.user.email && token?.email) {
-        session.user.email = token.email;
-      }
 
       return session;
     },
