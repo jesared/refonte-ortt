@@ -37,21 +37,27 @@ export const authConfig: NextAuthConfig = {
       return !!user.email;
     },
 
-    async jwt({ token }) {
-      if (!token.email) {
-        token.role = "USER";
-        return token;
+    async jwt({ token, user }) {
+      // première connexion
+      if (user) {
+        token.sub = user.id;
       }
 
-      const dbUser = await prisma.user.findUnique({
-        where: { email: token.email },
-      });
+      if (token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+          select: {
+            id: true,
+            role: true,
+          },
+        });
 
-      if (dbUser) {
-        token.sub = dbUser.id;
-        token.role = dbUser.role;
-      } else {
-        token.role = "USER";
+        if (dbUser) {
+          token.sub = dbUser.id;
+          token.role = dbUser.role;
+        } else {
+          token.role = "USER";
+        }
       }
 
       return token;
@@ -60,7 +66,7 @@ export const authConfig: NextAuthConfig = {
     async session({ session, token }) {
       if (!session.user) return session;
 
-      session.user.id = token.sub as string;
+      session.user.id = token.sub ?? "";
       session.user.role = (token.role as Role) ?? "USER";
       session.user.isAdmin = session.user.role === "ADMIN";
 
