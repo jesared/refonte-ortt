@@ -37,19 +37,21 @@ export const authConfig: NextAuthConfig = {
       return !!user.email;
     },
 
-    async jwt({ token, user }) {
-      // premier login
-      if (user?.email) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
+    async jwt({ token }) {
+      if (!token.email) {
+        token.role = "USER";
+        return token;
+      }
 
-        if (dbUser) {
-          token.sub = dbUser.id;
-          token.role = dbUser.role;
-        } else {
-          token.role = "USER";
-        }
+      const dbUser = await prisma.user.findUnique({
+        where: { email: token.email },
+      });
+
+      if (dbUser) {
+        token.sub = dbUser.id;
+        token.role = dbUser.role;
+      } else {
+        token.role = "USER";
       }
 
       return token;
