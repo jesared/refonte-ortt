@@ -1,20 +1,18 @@
 import type { ReactNode } from "react";
 
-import { redirect } from "next/navigation";
-
 import { auth } from "@/auth";
-import { AdminShell } from "@/components/admin/admin-shell";
+import { redirect } from "next/navigation";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await auth();
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/auth/admin");
   }
 
-  if (session.user.role?.toLowerCase() !== "admin") {
+  if (session.user.role !== "ADMIN") {
     redirect("/user");
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return children;
 }
