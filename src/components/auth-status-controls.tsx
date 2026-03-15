@@ -18,7 +18,7 @@ export function AuthStatusControls() {
     setIsSubmitting(true);
 
     try {
-      const callbackUrl = "/admin";
+      const callbackUrl = "/user";
       const result = await signIn("google", {
         callbackUrl,
         redirect: false,
@@ -77,7 +77,7 @@ export function AuthStatusControls() {
 
   return (
     <div className="flex items-center gap-2">
-      <Link href="/admin" className="text-xs text-muted-foreground underline-offset-4 hover:underline">
+      <Link href={session.user?.role === "ADMIN" ? "/admin" : "/user"} className="text-xs text-muted-foreground underline-offset-4 hover:underline">
         {session.user?.email}
       </Link>
       <Button type="button" size="sm" variant="outline" onClick={handleLogout} disabled={isSubmitting}>
