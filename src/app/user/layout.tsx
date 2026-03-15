@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
+import { UserShell } from "@/components/user/user-shell";
 
 export default async function UserLayout({
   children,
@@ -15,5 +16,5 @@ export default async function UserLayout({
     redirect("/auth/admin");
   }
 
-  return <>{children}</>;
+  return <UserShell>{children}</UserShell>;
 }
