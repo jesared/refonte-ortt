@@ -42,10 +42,7 @@ export default async function AdminLoginPage({
       )}
 
       <div className="flex flex-wrap gap-3">
-        <LoginButton
-          callbackUrl="/admin"
-          label="Se connecter avec Google"
-        />
+        <LoginButton label="Se connecter avec Google" />
 
         <Link
           href="/"

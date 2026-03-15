@@ -4,13 +4,11 @@ import { Button } from "@/components/ui/button";
 import { signIn, useSession } from "next-auth/react";
 
 type LoginButtonProps = {
-  callbackUrl?: string;
   label?: string;
   disabled?: boolean;
 };
 
 export function LoginButton({
-  callbackUrl = "/admin",
   label = "Connexion administrateur",
   disabled = false,
 }: LoginButtonProps) {
@@ -34,7 +32,7 @@ export function LoginButton({
       disabled={disabled}
       onClick={() =>
         signIn("google", {
-          callbackUrl,
+          callbackUrl: "/admin",
         })
       }
     >
