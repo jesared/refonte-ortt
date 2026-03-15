@@ -1,28 +1,26 @@
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+export default auth((req) => {
+  const { nextUrl } = req;
+  const session = req.auth;
 
+  // laisser passer auth
   if (
-    pathname.startsWith("/api/auth") ||
-    pathname.startsWith("/auth") ||
-    pathname.startsWith("/_next")
+    nextUrl.pathname.startsWith("/api/auth") ||
+    nextUrl.pathname.startsWith("/auth") ||
+    nextUrl.pathname.startsWith("/_next")
   ) {
     return NextResponse.next();
   }
 
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-
-  if (!token) {
-    return NextResponse.redirect(new URL("/auth/admin", req.url));
+  // pas connecté
+  if (!session) {
+    return NextResponse.redirect(new URL("/auth/admin", nextUrl));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/admin/:path*", "/user/:path*"],
