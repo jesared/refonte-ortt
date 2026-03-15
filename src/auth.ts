@@ -40,6 +40,8 @@ export const authConfig: NextAuthConfig = {
     },
 
     async jwt({ token }) {
+      token.role = "USER";
+
       if (token.email) {
         const user = await prisma.user.findUnique({
           where: { email: token.email },
