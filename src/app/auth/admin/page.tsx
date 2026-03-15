@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import { LoginButton } from "@/components/login-button";
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -17,13 +19,19 @@ export default async function AdminLoginPage({
 }: {
   searchParams: Promise<{ error?: string; callbackUrl?: string }>;
 }) {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect(session.user.role === "ADMIN" ? "/admin" : "/user");
+  }
+
   const params = await searchParams;
   const isGoogleConfigured = Boolean(
     process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID,
   ) &&
     Boolean(process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET);
   const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null;
-  const callbackUrl = params.callbackUrl ?? "/admin";
+  const callbackUrl = params.callbackUrl ?? "/auth/redirect";
 
   return (
     <section className="mx-auto max-w-xl space-y-4 rounded-lg border border-border bg-card p-6 text-card-foreground">
