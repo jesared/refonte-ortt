@@ -26,11 +26,6 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
 
-  pages: {
-    signIn: "/auth/admin",
-    error: "/auth/admin",
-  },
-
   secret: authSecret,
   trustHost: true,
 
