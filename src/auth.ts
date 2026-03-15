@@ -33,22 +33,23 @@ export const authConfig: NextAuthConfig = {
   },
 
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider !== "google") return false;
-      if (!user.email) return false;
-      return true;
+    async signIn({ user }) {
+      return !!user.email;
     },
 
-    async jwt({ token }) {
-      token.role = "USER";
-
-      if (token.email) {
-        const user = await prisma.user.findUnique({
-          where: { email: token.email },
-          select: { role: true },
+    async jwt({ token, user }) {
+      // premier login
+      if (user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
         });
 
-        token.role = user?.role ?? "USER";
+        if (dbUser) {
+          token.sub = dbUser.id;
+          token.role = dbUser.role;
+        } else {
+          token.role = "USER";
+        }
       }
 
       return token;
@@ -59,7 +60,7 @@ export const authConfig: NextAuthConfig = {
 
       session.user.id = token.sub as string;
       session.user.role = (token.role as Role) ?? "USER";
-      session.user.isAdmin = session.user.role?.toLowerCase() === "admin";
+      session.user.isAdmin = session.user.role === "ADMIN";
 
       return session;
     },
