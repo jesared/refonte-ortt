@@ -24,6 +24,10 @@ export async function middleware(req: NextRequest) {
   const isAuthenticated = Boolean(token);
   const isAdmin = isAdminRole(token?.role);
 
+  if (pathname === "/api/auth/signin" && isAuthenticated) {
+    return NextResponse.redirect(new URL("/auth/redirect", nextUrl));
+  }
+
   if (pathname.startsWith("/admin")) {
     if (!isAuthenticated) {
       return NextResponse.redirect(buildSignInUrl(nextUrl));
@@ -48,5 +52,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/user/:path*"],
+  matcher: ["/admin/:path*", "/user/:path*", "/api/auth/signin"],
 };
