@@ -1,18 +1,22 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from "react"
 
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
-export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const session = await auth();
+type AdminLayoutProps = {
+  children: ReactNode
+}
+
+export default async function AdminLayout({ children }: AdminLayoutProps) {
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/auth/admin");
+    redirect("/auth/admin")
   }
 
   if (session.user.role !== "ADMIN") {
-    redirect("/user");
+    redirect("/user")
   }
 
-  return children;
+  return children
 }
