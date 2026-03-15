@@ -1,5 +1,10 @@
-import { LoginButton } from "@/components/login-button";
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+import { LoginButton } from "@/components/login-button";
 
 const ERROR_MESSAGES: Record<string, string> = {
   auth_required:
@@ -8,11 +13,17 @@ const ERROR_MESSAGES: Record<string, string> = {
     "Votre compte Google n'est pas autorisé à accéder à l'administration.",
 };
 
-export default function AdminLoginPage({
+export default async function AdminLoginPage({
   searchParams,
 }: {
   searchParams: { error?: string };
 }) {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect(session.user.role === "ADMIN" ? "/admin" : "/user");
+  }
+
   const errorMessage = searchParams.error
     ? ERROR_MESSAGES[searchParams.error]
     : null;
