@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import { auth } from "@/auth"
+import { AdminShell } from "@/components/admin/admin-shell"
 import { redirect } from "next/navigation"
 
 type AdminLayoutProps = {
@@ -18,5 +19,5 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     redirect("/user")
   }
 
-  return children
+  return <AdminShell>{children}</AdminShell>
 }
