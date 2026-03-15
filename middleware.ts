@@ -9,6 +9,7 @@ function isAdmin(role: unknown) {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // routes autorisées
   if (
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/auth") ||
@@ -20,6 +21,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: true,
   });
 
   if (pathname.startsWith("/admin")) {
