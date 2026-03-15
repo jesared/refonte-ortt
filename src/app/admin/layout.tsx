@@ -1,40 +1,20 @@
-"use client";
-
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
 
-import { usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 
-import { AdminHeader } from "@/components/admin/admin-header";
-import { Sidebar } from "@/components/admin/sidebar";
+import { auth } from "@/auth";
+import { AdminShell } from "@/components/admin/admin-shell";
 
-const TITLES: Record<string, string> = {
-  "/admin": "Dashboard",
-  "/admin/pages": "Pages",
-  "/admin/news": "Actualités",
-  "/admin/media": "Médias",
-  "/admin/users": "Utilisateurs",
-  "/admin/profile": "Profil",
-};
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const session = await auth();
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+  if (!session?.user) {
+    redirect("/auth/admin");
+  }
 
-  const title = useMemo(() => {
-    if (pathname.startsWith("/admin/pages/")) return "Édition d'une page";
-    if (pathname.startsWith("/admin/news/")) return "Édition d'une actualité";
-    return TITLES[pathname] ?? "Administration";
-  }, [pathname]);
+  if (session.user.role?.toLowerCase() !== "admin") {
+    redirect("/user");
+  }
 
-  return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
-
-      <div className="min-w-0 flex-1">
-        <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-        <main className="p-4 sm:p-6">{children}</main>
-      </div>
-    </div>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }

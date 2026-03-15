@@ -1,32 +1,20 @@
-"use client";
-
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
 
-import { usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 
-import { AdminHeader } from "@/components/admin/admin-header";
-import { UserSidebar } from "@/components/user/sidebar";
+import { auth } from "@/auth";
+import { UserShell } from "@/components/user/user-shell";
 
-const TITLES: Record<string, string> = {
-  "/user": "Accueil",
-  "/user/profile": "Mon profil",
-};
+export default async function UserLayout({ children }: { children: ReactNode }) {
+  const session = await auth();
 
-export default function UserLayout({ children }: { children: ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+  if (!session?.user) {
+    redirect("/auth/admin");
+  }
 
-  const title = useMemo(() => TITLES[pathname] ?? "Espace utilisateur", [pathname]);
+  if (session.user.role?.toLowerCase() === "admin") {
+    redirect("/admin");
+  }
 
-  return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <UserSidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
-
-      <div className="min-w-0 flex-1">
-        <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-        <main className="p-4 sm:p-6">{children}</main>
-      </div>
-    </div>
-  );
+  return <UserShell>{children}</UserShell>;
 }
