@@ -1,7 +1,9 @@
 "use client";
 
+import { Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 import { AuthStatusControls } from "@/components/auth-status-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -19,6 +21,7 @@ const menuItems = [
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -44,6 +47,13 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <AuthStatusControls />
+            {session ? (
+              <Button asChild variant="outline" size="icon" aria-label="Accéder à mon espace utilisateur">
+                <Link href="/user">
+                  <Users className="size-4" />
+                </Link>
+              </Button>
+            ) : null}
             <ThemeToggle />
             <Button
               type="button"
