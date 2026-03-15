@@ -3,7 +3,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/admin")) {
+  const { pathname } = req.nextUrl;
+
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/user")) {
     return NextResponse.next();
   }
 
@@ -12,13 +14,17 @@ export async function middleware(req: NextRequest) {
     secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   });
 
-  if (!token || token.role !== "ADMIN") {
+  if (!token) {
     return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (pathname.startsWith("/admin") && token.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/user", req.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/user/:path*"],
 };
