@@ -31,7 +31,12 @@ export default async function AdminLoginPage({
   ) &&
     Boolean(process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET);
   const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null;
-  const callbackUrl = params.callbackUrl ?? "/auth/redirect";
+  const requestedCallbackUrl = params.callbackUrl ?? "/auth/redirect";
+  const callbackUrl = requestedCallbackUrl.startsWith("/")
+    ? requestedCallbackUrl === "/admin" || requestedCallbackUrl.startsWith("/admin?")
+      ? "/auth/redirect"
+      : requestedCallbackUrl
+    : "/auth/redirect";
 
   return (
     <section className="mx-auto max-w-xl space-y-4 rounded-lg border border-border bg-card p-6 text-card-foreground">
