@@ -1,12 +1,12 @@
 "use client";
 
-import { ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { AuthStatusControls } from "@/components/auth-status-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
@@ -22,6 +22,12 @@ const menuItems = [
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
+  const userLabel = session?.user?.name ?? session?.user?.email ?? "Utilisateur";
+  const userInitials = userLabel
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -53,7 +59,10 @@ export function Header() {
                 aria-label="Accéder à mon espace utilisateur"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ShieldUser className="size-4" />
+                <Avatar className="size-7">
+                  {session.user?.image ? <AvatarImage src={session.user.image} alt={userLabel} /> : null}
+                  <AvatarFallback className="text-[10px]">{userInitials || "U"}</AvatarFallback>
+                </Avatar>
               </Link>
             ) : null}
             <ThemeToggle />
