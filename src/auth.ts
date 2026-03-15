@@ -71,7 +71,7 @@ export const authConfig: NextAuthConfig = {
 
       session.user.id = token.sub as string;
       session.user.role = (token.role as Role) ?? "USER";
-      session.user.isAdmin = session.user.role === "ADMIN";
+      session.user.isAdmin = session.user.role?.toLowerCase() === "admin";
 
       return session;
     },

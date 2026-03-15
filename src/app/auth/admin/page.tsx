@@ -22,7 +22,7 @@ export default async function AdminLoginPage({
   const session = await auth();
 
   if (session?.user) {
-    redirect(session.user.role === "ADMIN" ? "/admin" : "/user");
+    redirect(session.user.role?.toLowerCase() === "admin" ? "/admin" : "/user");
   }
 
   const params = await searchParams;
