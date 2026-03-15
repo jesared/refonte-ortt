@@ -8,6 +8,8 @@ import { Hero } from "@/components/hero";
 import { LoginButton } from "@/components/login-button";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
   return (
     <div className="space-y-8">
