@@ -1,35 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn, useSession } from "next-auth/react";
-
-type LoginButtonProps = {
-  label?: string;
-  disabled?: boolean;
-};
+import { signIn } from "next-auth/react";
 
 export function LoginButton({
-  label = "Connexion administrateur",
-  disabled = false,
-}: LoginButtonProps) {
-  const { data: session, status } = useSession();
-
-  if (status === "loading") {
-    return (
-      <Button type="button" disabled>
-        Chargement...
-      </Button>
-    );
-  }
-
-  if (session?.user) {
-    return null;
-  }
-
+  label = "Se connecter avec Google",
+}: {
+  label?: string;
+}) {
   return (
     <Button
       type="button"
-      disabled={disabled}
       onClick={() =>
         signIn("google", {
           callbackUrl: "/admin",
