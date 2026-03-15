@@ -186,6 +186,16 @@ export function Shield(props: LucideProps) {
   );
 }
 
+export function ShieldUser(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3z" />
+      <circle cx="12" cy="10" r="2.5" />
+      <path d="M8.5 16a3.5 3.5 0 0 1 7 0" />
+    </BaseIcon>
+  );
+}
+
 export function LogIn(props: LucideProps) {
   return (
     <BaseIcon {...props}>
