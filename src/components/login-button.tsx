@@ -11,11 +11,7 @@ export function LoginButton({
   return (
     <Button
       type="button"
-      onClick={() =>
-        signIn("google", {
-          callbackUrl: "/admin",
-        })
-      }
+      onClick={() => signIn("google", { callbackUrl: "/admin" })}
     >
       {label}
     </Button>
