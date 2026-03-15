@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 
 export function AuthStatusControls() {
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,19 +15,9 @@ export function AuthStatusControls() {
     setIsSubmitting(true);
 
     try {
-      const callbackUrl = "/auth/redirect";
-      const result = await signIn("google", {
-        callbackUrl,
-        redirect: false,
+      await signIn("google", {
+        callbackUrl: "/admin",
       });
-
-      if (result?.url) {
-        router.push(result.url);
-      } else {
-        router.push(callbackUrl);
-      }
-
-      router.refresh();
     } finally {
       setIsSubmitting(false);
     }
