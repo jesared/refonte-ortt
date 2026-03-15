@@ -22,7 +22,7 @@ type SidebarProps = {
 
 function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "ADMIN";
+  const isAdmin = session?.user?.role?.toLowerCase() === "admin";
 
   return (
     <div className="flex h-full min-h-0 flex-col">
