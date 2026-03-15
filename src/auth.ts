@@ -12,7 +12,8 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
 
 const authSecret =
   process.env.NEXTAUTH_SECRET ??
-  (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
+  process.env.AUTH_SECRET ??
+  "fallback-auth-secret-change-me";
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
