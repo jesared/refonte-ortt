@@ -26,7 +26,10 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/admin")) {
     if (!isAuthenticated) {
       const signInUrl = new URL("/auth/admin", nextUrl);
-      signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+      // Route users through a role-aware redirect page after OAuth callback.
+      // This avoids sending non-admin users to /admin first, which causes an
+      // extra 307 before landing on /user.
+      signInUrl.searchParams.set("callbackUrl", "/auth/redirect");
       return NextResponse.redirect(signInUrl);
     }
 
