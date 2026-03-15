@@ -8,7 +8,10 @@ function isAdminRole(role: unknown) {
 
 function buildSignInUrl(nextUrl: NextRequest["nextUrl"]) {
   const signInUrl = new URL("/api/auth/signin", nextUrl);
-  signInUrl.searchParams.set("callbackUrl", "/auth/redirect");
+  signInUrl.searchParams.set(
+    "callbackUrl",
+    `${nextUrl.pathname}${nextUrl.search}`,
+  );
   return signInUrl;
 }
 
@@ -16,17 +19,17 @@ export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const { pathname } = nextUrl;
 
+  if (pathname.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({
     req,
-    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
   const isAuthenticated = Boolean(token);
   const isAdmin = isAdminRole(token?.role);
-
-  if (pathname === "/api/auth/signin" && isAuthenticated) {
-    return NextResponse.redirect(new URL("/auth/redirect", nextUrl));
-  }
 
   if (pathname.startsWith("/admin")) {
     if (!isAuthenticated) {
@@ -52,5 +55,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/user/:path*", "/api/auth/signin"],
+  matcher: ["/admin/:path*", "/user/:path*"],
 };
