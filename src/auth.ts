@@ -11,7 +11,6 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "admin@ortt.fr")
   .filter(Boolean);
 
 const authSecret =
-  process.env.AUTH_SECRET ??
   process.env.NEXTAUTH_SECRET ??
   (process.env.NODE_ENV !== "production" ? "dev-only-secret" : undefined);
 
