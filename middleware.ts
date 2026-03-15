@@ -1,28 +1,45 @@
-import { getToken } from "next-auth/jwt";
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next();
+import { auth } from "@/auth";
+
+export default auth((req) => {
+  const { nextUrl, auth: session } = req;
+  const { pathname } = nextUrl;
+  const isAuthenticated = Boolean(session?.user);
+  const role = session?.user?.role;
+
+  if (pathname.startsWith("/auth/admin") && isAuthenticated) {
+    const destination = role?.toLowerCase() === "admin" ? "/admin" : "/user";
+    return NextResponse.redirect(new URL(destination, nextUrl));
   }
 
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  if (pathname.startsWith("/admin")) {
+    if (!isAuthenticated) {
+      const signInUrl = new URL("/auth/admin", nextUrl);
+      signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+      return NextResponse.redirect(signInUrl);
+    }
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/auth/admin", req.url));
+    if (role?.toLowerCase() !== "admin") {
+      return NextResponse.redirect(new URL("/user", nextUrl));
+    }
   }
 
-  if (token.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (pathname.startsWith("/user")) {
+    if (!isAuthenticated) {
+      const signInUrl = new URL("/auth/admin", nextUrl);
+      signInUrl.searchParams.set("callbackUrl", "/auth/redirect");
+      return NextResponse.redirect(signInUrl);
+    }
+
+    if (role?.toLowerCase() === "admin") {
+      return NextResponse.redirect(new URL("/admin", nextUrl));
+    }
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/user/:path*", "/auth/admin"],
 };

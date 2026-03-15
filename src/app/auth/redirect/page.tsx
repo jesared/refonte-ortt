@@ -9,7 +9,7 @@ export default async function AuthRedirectPage() {
     redirect("/");
   }
 
-  if (session.user.role === "ADMIN") {
+  if (session.user.role?.toLowerCase() === "admin") {
     redirect("/admin");
   }
 
