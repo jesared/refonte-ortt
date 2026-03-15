@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Shield, Users, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
@@ -8,11 +8,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/pages", label: "Pages", icon: FileText },
-  { href: "/admin/news", label: "Actualités", icon: Newspaper },
-  { href: "/admin/media", label: "Médias", icon: Image },
-  { href: "/admin/users", label: "Utilisateurs", icon: Users },
+  { href: "/user", label: "Accueil", icon: LayoutDashboard },
+  { href: "/user/profile", label: "Mon profil", icon: Users },
 ];
 
 type SidebarProps = {
@@ -27,12 +24,10 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-5 py-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {isAdmin ? "Administration" : "Mon espace"}
-        </p>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Mon espace</p>
         <h2 className="mt-1 text-sm font-semibold text-foreground">Olympique Rémois Tennis de Table</h2>
       </div>
-      <nav aria-label="Navigation principale" className="flex-1 overflow-y-auto px-3 py-4">
+      <nav aria-label="Navigation utilisateur" className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {navigation.map((item) => (
             <SidebarItem key={item.href} {...item} onClick={onCloseMobile} />
@@ -44,7 +39,7 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
           {session?.user?.email ?? "Utilisateur non connecté"}
         </p>
         <ul className="space-y-1">
-          <SidebarItem href="/admin/profile" label="Profil" icon={Shield} onClick={onCloseMobile} />
+          {isAdmin ? <SidebarItem href="/admin" label="Administration" icon={Shield} onClick={onCloseMobile} /> : null}
           <li>
             <Button
               type="button"
@@ -65,7 +60,7 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   );
 }
 
-export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
+export function UserSidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   return (
     <>
       <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 border-r border-border bg-background lg:flex lg:flex-col">
