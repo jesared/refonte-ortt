@@ -1,8 +1,5 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
-import { auth } from "@/auth";
 import { LoginButton } from "@/components/login-button";
+import Link from "next/link";
 
 const ERROR_MESSAGES: Record<string, string> = {
   auth_required:
@@ -11,17 +8,11 @@ const ERROR_MESSAGES: Record<string, string> = {
     "Votre compte Google n'est pas autorisé à accéder à l'administration.",
 };
 
-export default async function AdminLoginPage({
+export default function AdminLoginPage({
   searchParams,
 }: {
   searchParams: { error?: string };
 }) {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect(session.user.role?.toLowerCase() === "admin" ? "/admin" : "/user");
-  }
-
   const errorMessage = searchParams.error
     ? ERROR_MESSAGES[searchParams.error]
     : null;
@@ -31,8 +22,7 @@ export default async function AdminLoginPage({
       <h1 className="text-xl font-semibold">Connexion administrateur</h1>
 
       <p className="text-sm text-muted-foreground">
-        Connectez-vous avec un compte Google autorisé pour accéder à
-        l&apos;espace admin.
+        Connectez-vous avec Google pour accéder à l’espace administrateur.
       </p>
 
       {errorMessage && (
