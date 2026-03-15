@@ -14,7 +14,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 export default async function AdminLoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string; callbackUrl?: string };
+  searchParams: { error?: string };
 }) {
   const session = await auth();
 
@@ -25,8 +25,6 @@ export default async function AdminLoginPage({
   const errorMessage = searchParams.error
     ? ERROR_MESSAGES[searchParams.error]
     : null;
-
-  const callbackUrl = searchParams.callbackUrl ?? "/admin";
 
   return (
     <section className="mx-auto max-w-xl space-y-4 rounded-lg border border-border bg-card p-6 text-card-foreground">
@@ -45,7 +43,7 @@ export default async function AdminLoginPage({
 
       <div className="flex flex-wrap gap-3">
         <LoginButton
-          callbackUrl={callbackUrl}
+          callbackUrl="/admin"
           label="Se connecter avec Google"
         />
 
