@@ -2,24 +2,20 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-function isAdminRole(role: unknown) {
+function isAdmin(role: unknown) {
   return typeof role === "string" && role.toLowerCase() === "admin";
 }
 
-function buildSignInUrl(nextUrl: NextRequest["nextUrl"]) {
-  const signInUrl = new URL("/api/auth/signin", nextUrl);
-  signInUrl.searchParams.set(
-    "callbackUrl",
-    `${nextUrl.pathname}${nextUrl.search}`,
-  );
-  return signInUrl;
-}
-
 export async function middleware(req: NextRequest) {
-  const { nextUrl } = req;
-  const { pathname } = nextUrl;
+  const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/api/auth")) {
+  // Laisser passer les routes auth et publiques
+  if (
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/_next") ||
+    pathname === "/"
+  ) {
     return NextResponse.next();
   }
 
@@ -28,26 +24,21 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const isAuthenticated = Boolean(token);
-  const isAdmin = isAdminRole(token?.role);
-
+  // Accès admin
   if (pathname.startsWith("/admin")) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(buildSignInUrl(nextUrl));
+    if (!token) {
+      return NextResponse.redirect(new URL("/auth/admin", req.url));
     }
 
-    if (!isAdmin) {
-      return NextResponse.redirect(new URL("/user", nextUrl));
+    if (!isAdmin(token.role)) {
+      return NextResponse.redirect(new URL("/user", req.url));
     }
   }
 
+  // Accès user
   if (pathname.startsWith("/user")) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(buildSignInUrl(nextUrl));
-    }
-
-    if (isAdmin) {
-      return NextResponse.redirect(new URL("/admin", nextUrl));
+    if (!token) {
+      return NextResponse.redirect(new URL("/auth/admin", req.url));
     }
   }
 
