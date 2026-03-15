@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "lucide-react";
+import { ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
@@ -53,7 +53,7 @@ export function Header() {
                 aria-label="Accéder à mon espace utilisateur"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <Users className="size-4" />
+                <ShieldUser className="size-4" />
               </Link>
             ) : null}
             <ThemeToggle />
