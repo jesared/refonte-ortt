@@ -9,7 +9,7 @@ export default auth((req) => {
   const role = session?.user?.role;
 
   if (pathname.startsWith("/auth/admin") && isAuthenticated) {
-    const destination = role === "ADMIN" ? "/admin" : "/user";
+    const destination = role?.toLowerCase() === "admin" ? "/admin" : "/user";
     return NextResponse.redirect(new URL(destination, nextUrl));
   }
 
@@ -20,7 +20,7 @@ export default auth((req) => {
       return NextResponse.redirect(signInUrl);
     }
 
-    if (role !== "ADMIN") {
+    if (role?.toLowerCase() !== "admin") {
       return NextResponse.redirect(new URL("/user", nextUrl));
     }
   }
@@ -32,7 +32,7 @@ export default auth((req) => {
       return NextResponse.redirect(signInUrl);
     }
 
-    if (role === "ADMIN") {
+    if (role?.toLowerCase() === "admin") {
       return NextResponse.redirect(new URL("/admin", nextUrl));
     }
   }
