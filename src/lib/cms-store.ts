@@ -34,7 +34,18 @@ type DbShape = {
   media: CmsMedia[];
 };
 
-const DB_PATH = path.join(process.cwd(), "data", "cms.json");
+function resolveDbPath(): string {
+  const configuredPath = process.env.CMS_DB_PATH;
+  if (configuredPath) return configuredPath;
+
+  if (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") {
+    return path.join("/tmp", "data", "cms.json");
+  }
+
+  return path.join(process.cwd(), "data", "cms.json");
+}
+
+const DB_PATH = resolveDbPath();
 
 const INITIAL_DATA: DbShape = {
   pages: [],
