@@ -1,5 +1,6 @@
 "use client";
 
+import type { Session } from "next-auth";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
@@ -17,7 +18,12 @@ const TITLES: Record<string, string> = {
   "/admin/profile": "Profil",
 };
 
-export function AdminShell({ children }: { children: ReactNode }) {
+type AdminShellProps = {
+  children: ReactNode;
+  session: Session | null;
+};
+
+export function AdminShell({ children, session }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
@@ -33,6 +39,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar
+        session={session}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
       />

@@ -21,5 +21,5 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     redirect("/user");
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminShell session={session}>{children}</AdminShell>;
 }
