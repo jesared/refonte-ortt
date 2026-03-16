@@ -22,14 +22,20 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const title = useMemo(() => {
+    if (!pathname) return "Administration";
+
     if (pathname.startsWith("/admin/pages/")) return "Édition d'une page";
     if (pathname.startsWith("/admin/news/")) return "Édition d'une actualité";
+
     return TITLES[pathname] ?? "Administration";
   }, [pathname]);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
+      />
 
       <div className="min-w-0 flex-1">
         <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
