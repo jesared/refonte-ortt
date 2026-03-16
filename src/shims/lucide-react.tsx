@@ -88,6 +88,17 @@ export function FileText(props: LucideProps) {
   );
 }
 
+export function Receipt(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M4 3h16v18l-2-1.5L16 21l-2-1.5L12 21l-2-1.5L8 21l-2-1.5L4 21z" />
+      <path d="M8 7h8" />
+      <path d="M8 11h8" />
+      <path d="M8 15h5" />
+    </BaseIcon>
+  );
+}
+
 export function Newspaper(props: LucideProps) {
   return (
     <BaseIcon {...props}>
@@ -146,6 +157,18 @@ export function Bell(props: LucideProps) {
       <path d="M10.27 21a2 2 0 0 0 3.46 0" />
       <path d="M4 16h16" />
       <path d="M6 16V11a6 6 0 1 1 12 0v5" />
+    </BaseIcon>
+  );
+}
+
+export function Trophy(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M8 21h8" />
+      <path d="M12 17v4" />
+      <path d="M8 4h8v5a4 4 0 0 1-8 0z" />
+      <path d="M16 6h3a1 1 0 0 1 1 1v1a4 4 0 0 1-4 4" />
+      <path d="M8 6H5a1 1 0 0 0-1 1v1a4 4 0 0 0 4 4" />
     </BaseIcon>
   );
 }
@@ -220,6 +243,16 @@ export function LogOut(props: LucideProps) {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <path d="M14 17l5-5-5-5" />
       <path d="M19 12H9" />
+    </BaseIcon>
+  );
+}
+
+export function Download(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M12 3v12" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M5 21h14" />
     </BaseIcon>
   );
 }
