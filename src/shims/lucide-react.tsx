@@ -196,6 +196,14 @@ export function ShieldUser(props: LucideProps) {
   );
 }
 
+
+export function ChevronDown(props: LucideProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </BaseIcon>
+  );
+}
 export function LogIn(props: LucideProps) {
   return (
     <BaseIcon {...props}>
