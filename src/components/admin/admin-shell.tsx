@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Sidebar } from "@/components/admin/sidebar";
+import type { AdminSidebarSession } from "@/components/admin/admin-session";
 
 const TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -20,7 +21,7 @@ const TITLES: Record<string, string> = {
 
 type AdminShellProps = {
   children: ReactNode;
-  session: Session | null;
+  session: AdminSidebarSession;
 };
 
 export function AdminShell({ children, session }: AdminShellProps) {

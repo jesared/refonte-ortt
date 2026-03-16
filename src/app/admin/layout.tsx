@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { auth } from "@/auth";
 import { AdminShell } from "@/components/admin/admin-shell";
+import type { AdminSidebarSession } from "@/components/admin/admin-session";
 import { redirect } from "next/navigation";
 
 type AdminLayoutProps = {
@@ -21,5 +22,12 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     redirect("/user");
   }
 
-  return <AdminShell session={session}>{children}</AdminShell>;
+  const sidebarSession: AdminSidebarSession = {
+    user: {
+      email: session.user.email ?? null,
+      role: session.user.role ?? "USER",
+    },
+  };
+
+  return <AdminShell session={sidebarSession}>{children}</AdminShell>;
 }

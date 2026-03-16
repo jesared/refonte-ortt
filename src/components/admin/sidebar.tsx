@@ -5,6 +5,7 @@ import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X }
 import { signOut } from "next-auth/react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
+import type { AdminSidebarSession } from "@/components/admin/admin-session";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ const navigation = [
 ];
 
 type SidebarProps = {
-  session: Session | null;
+  session: AdminSidebarSession;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 };
@@ -26,7 +27,7 @@ function SidebarContent({
   session,
   onCloseMobile,
 }: {
-  session: Session | null;
+  session: AdminSidebarSession;
   onCloseMobile?: () => void;
 }) {
   const role = session?.user?.role ?? "USER";
