@@ -105,7 +105,7 @@ export function Header() {
                 <Link
                   href="/user"
                   aria-label="Accéder à mon espace utilisateur"
-                  className="inline-flex h-9 items-center gap-2 rounded-md border border-input px-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-9 items-center gap-2 px-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <Avatar className="h-8 w-8 flex-shrink-0">
                     {shouldShowAvatarImage ? (
