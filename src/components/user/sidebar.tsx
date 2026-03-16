@@ -1,6 +1,15 @@
 "use client";
 
-import { Bell, FileText, LayoutDashboard, LogOut, Receipt, Shield, Trophy, Users, X } from "lucide-react";
+import {
+  Bell,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Receipt,
+  Shield,
+  Users,
+  X,
+} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
@@ -11,8 +20,8 @@ const navigation = [
   { href: "/user", label: "Dashboard", icon: LayoutDashboard },
   { href: "/user/profile", label: "Mon profil", icon: Users },
   { href: "/user/inscriptions", label: "Mes inscriptions", icon: FileText },
-  { href: "/user/tournois", label: "Mes tournois", icon: Trophy },
-  { href: "/user/resultats", label: "Mes résultats", icon: Trophy },
+  // { href: "/user/tournois", label: "Mes tournois", icon: Trophy },
+  // { href: "/user/resultats", label: "Mes résultats", icon: Trophy },
   { href: "/user/documents", label: "Documents", icon: FileText },
   { href: "/user/tarifs", label: "Tarifs", icon: Receipt },
   { href: "/user/notifications", label: "Notifications", icon: Bell },
@@ -30,10 +39,17 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-5 py-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Mon espace</p>
-        <h2 className="mt-1 text-sm font-semibold text-foreground">Olympique Rémois Tennis de Table</h2>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Mon espace
+        </p>
+        <h2 className="mt-1 text-sm font-semibold text-foreground">
+          Olympique Rémois Tennis de Table
+        </h2>
       </div>
-      <nav aria-label="Navigation utilisateur" className="flex-1 overflow-y-auto px-3 py-4">
+      <nav
+        aria-label="Navigation utilisateur"
+        className="flex-1 overflow-y-auto px-3 py-4"
+      >
         <ul className="space-y-1">
           {navigation.map((item) => (
             <SidebarItem key={item.href} {...item} onClick={onCloseMobile} />
@@ -45,7 +61,14 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
           {session?.user?.email ?? "Utilisateur non connecté"}
         </p>
         <ul className="space-y-1">
-          {isAdmin ? <SidebarItem href="/admin" label="Administration" icon={Shield} onClick={onCloseMobile} /> : null}
+          {isAdmin ? (
+            <SidebarItem
+              href="/admin"
+              label="Administration"
+              icon={Shield}
+              onClick={onCloseMobile}
+            />
+          ) : null}
           <li>
             <Button
               type="button"
@@ -90,7 +113,12 @@ export function UserSidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         aria-label="Navigation mobile"
       >
         <div className="flex items-center justify-end border-b border-border px-3 py-2">
-          <Button variant="outline" size="sm" onClick={onCloseMobile} aria-label="Fermer le menu">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCloseMobile}
+            aria-label="Fermer le menu"
+          >
             <X className="size-4" />
           </Button>
         </div>
