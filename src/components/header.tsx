@@ -53,13 +53,13 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+      <header className="sticky top-0 z-40 overflow-visible border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between overflow-visible px-4 py-4">
           <Link href="/" className="text-lg font-semibold text-foreground">
             Olympique Rémois Tennis de Table
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex" aria-label="Navigation principale">
+          <nav className="relative z-50 hidden items-center gap-6 md:flex" aria-label="Navigation principale">
             {menuItems.map((item) => {
               if (!item.children) {
                 return (
@@ -82,7 +82,7 @@ export function Header() {
                     {item.label}
                     <ChevronDown className="size-4" aria-hidden="true" />
                   </Link>
-                  <div className="invisible absolute left-0 top-full z-50 mt-2 min-w-44 rounded-md border border-border bg-background p-2 opacity-0 shadow-md transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <div className="invisible absolute left-0 top-full z-[100] mt-2 min-w-44 rounded-md border border-border bg-background p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                     {item.children.map((subItem) => (
                       <Link
                         key={subItem.label}
@@ -98,7 +98,7 @@ export function Header() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="relative z-10 flex items-center gap-2">
             <AuthStatusControls />
             {session ? (
               <>
