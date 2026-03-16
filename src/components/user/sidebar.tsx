@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, Shield, Users, X } from "lucide-react";
+import { Bell, FileText, LayoutDashboard, LogOut, Receipt, Shield, Trophy, Users, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
@@ -8,8 +8,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { href: "/user", label: "Accueil", icon: LayoutDashboard },
+  { href: "/user", label: "Dashboard", icon: LayoutDashboard },
   { href: "/user/profile", label: "Mon profil", icon: Users },
+  { href: "/user/inscriptions", label: "Mes inscriptions", icon: FileText },
+  { href: "/user/tournois", label: "Mes tournois", icon: Trophy },
+  { href: "/user/resultats", label: "Mes résultats", icon: Trophy },
+  { href: "/user/documents", label: "Documents", icon: FileText },
+  { href: "/user/tarifs", label: "Tarifs", icon: Receipt },
+  { href: "/user/notifications", label: "Notifications", icon: Bell },
 ];
 
 type SidebarProps = {

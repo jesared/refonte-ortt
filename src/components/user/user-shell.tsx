@@ -9,8 +9,10 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { UserSidebar } from "@/components/user/sidebar";
 
 const TITLES: Record<string, string> = {
-  "/user": "Accueil",
+  "/user": "Dashboard",
   "/user/profile": "Mon profil",
+  "/user/documents": "Documents",
+  "/user/tarifs": "Tarifs",
 };
 
 export function UserShell({ children }: { children: ReactNode }) {
