@@ -19,7 +19,15 @@ type AvatarImageProps = {
 };
 
 export function AvatarImage({ className, alt, src }: AvatarImageProps) {
-  return <Image className={cn("aspect-square size-full", className)} alt={alt} src={src} width={40} height={40} />;
+  const normalizedSrc = src.trim();
+
+  if (!normalizedSrc) {
+    return null;
+  }
+
+  return (
+    <Image className={cn("aspect-square size-full", className)} alt={alt} src={normalizedSrc} width={40} height={40} />
+  );
 }
 
 export function AvatarFallback({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

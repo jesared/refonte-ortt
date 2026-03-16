@@ -37,12 +37,14 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isClubMobileOpen, setIsClubMobileOpen] = useState(false);
   const { data: session } = useSession();
-  const userLabel = session?.user?.name ?? session?.user?.email ?? "Utilisateur";
-  const userInitials = userLabel
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+  const userInitials =
+    session?.user?.name
+      ?.split(" ")
+      .filter(Boolean)
+      .map((namePart) => namePart[0] ?? "")
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "U";
 
   const closeMenu = () => {
     setIsMenuOpen(false);
@@ -103,11 +105,13 @@ export function Header() {
                 <Link
                   href="/user"
                   aria-label="Accéder à mon espace utilisateur"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  <Avatar className="size-7">
-                    {session.user?.image ? <AvatarImage src={session.user.image} alt={userLabel} /> : null}
-                    <AvatarFallback className="text-[10px]">{userInitials || "U"}</AvatarFallback>
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={session?.user?.image ?? ""} alt={session?.user?.name ?? "Utilisateur"} />
+                    <AvatarFallback className="flex items-center justify-center text-xs font-semibold">
+                      {userInitials}
+                    </AvatarFallback>
                   </Avatar>
                 </Link>
                 <Button
