@@ -1,5 +1,6 @@
 "use client";
 
+import type { Session } from "next-auth";
 import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 

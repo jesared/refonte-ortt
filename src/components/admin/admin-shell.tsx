@@ -1,5 +1,6 @@
 "use client";
 
+import type { Session } from "next-auth";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
