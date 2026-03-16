@@ -19,11 +19,17 @@ export function UserShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
-  const title = useMemo(() => TITLES[pathname] ?? "Espace utilisateur", [pathname]);
+  const title = useMemo(
+    () => TITLES[pathname] ?? "Espace utilisateur",
+    [pathname],
+  );
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <UserSidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+      <UserSidebar
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
+      />
 
       <div className="min-w-0 flex-1">
         <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />

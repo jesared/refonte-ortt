@@ -11,7 +11,7 @@ type AdminHeaderProps = {
 
 export function AdminHeader({ title, onMenuClick }: AdminHeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-6">
+    <header className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
           <Button
@@ -36,7 +36,12 @@ export function AdminHeader({ title, onMenuClick }: AdminHeaderProps) {
             />
           </div>
 
-          <Button variant="outline" size="sm" aria-label="Notifications" className="shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            aria-label="Notifications"
+            className="shrink-0"
+          >
             <Bell className="size-4" />
           </Button>
 

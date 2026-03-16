@@ -1,10 +1,9 @@
 "use client";
 
+import { ChevronDown, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { ChevronDown, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
 
 import { AuthStatusControls } from "@/components/auth-status-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -40,7 +39,8 @@ export function Header() {
   const [failedAvatarSrc, setFailedAvatarSrc] = useState<string | null>(null);
   const { data: session } = useSession();
   const avatarSrc = session?.user?.image?.trim() ?? "";
-  const shouldShowAvatarImage = Boolean(avatarSrc) && failedAvatarSrc !== avatarSrc;
+  const shouldShowAvatarImage =
+    Boolean(avatarSrc) && failedAvatarSrc !== avatarSrc;
   const userInitials = getInitials(session?.user?.name);
 
   const closeMenu = () => {
@@ -56,7 +56,10 @@ export function Header() {
             Olympique Rémois Tennis de Table
           </Link>
 
-          <nav className="relative z-50 hidden items-center gap-6 md:flex" aria-label="Navigation principale">
+          <nav
+            className="relative z-50 hidden items-center gap-6 md:flex"
+            aria-label="Navigation principale"
+          >
             {menuItems.map((item) => {
               if (!item.children) {
                 return (
@@ -102,7 +105,7 @@ export function Header() {
                 <Link
                   href="/user"
                   aria-label="Accéder à mon espace utilisateur"
-                  className="inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-9 items-center gap-2 rounded-md border border-input px-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <Avatar className="h-8 w-8 flex-shrink-0">
                     {shouldShowAvatarImage ? (
@@ -213,7 +216,11 @@ export function Header() {
                         size="sm"
                         className="h-8 w-8 p-0"
                         onClick={() => setIsClubMobileOpen((open) => !open)}
-                        aria-label={isClubMobileOpen ? "Masquer le sous-menu Club" : "Afficher le sous-menu Club"}
+                        aria-label={
+                          isClubMobileOpen
+                            ? "Masquer le sous-menu Club"
+                            : "Afficher le sous-menu Club"
+                        }
                         aria-expanded={isClubMobileOpen}
                       >
                         <ChevronDown
