@@ -1,33 +1,55 @@
-import { Users } from "lucide-react";
+import { Role } from "@prisma/client";
 
-import { UsersTable } from "@/components/admin/users-table";
+import { UsersDashboard } from "@/components/admin/users-dashboard";
 import { prisma } from "@/lib/prisma";
 
-export default async function AdminUsersPage() {
-  const users = await prisma.user.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
-      role: true,
-    },
-  });
+const PAGE_SIZE = 10;
 
-  return (
-    <section className="space-y-4">
-      <header className="rounded-lg border border-border bg-card p-5 text-card-foreground">
-        <div className="flex items-center gap-3">
-          <Users className="size-5" aria-hidden="true" />
-          <h1 className="text-lg font-semibold">Utilisateurs</h1>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Gérez ici les utilisateurs et leurs accès à l&apos;espace d&apos;administration.
-        </p>
-      </header>
+type SearchParams = Promise<{ page?: string; search?: string; role?: string }>;
 
-      <UsersTable users={users} />
-    </section>
-  );
+type AdminUsersPageProps = {
+  searchParams: SearchParams;
+};
+
+export default async function AdminUsersPage({ searchParams }: AdminUsersPageProps) {
+  const params = await searchParams;
+  const page = Number(params.page ?? "1");
+  const normalizedPage = Number.isNaN(page) || page < 1 ? 1 : page;
+  const search = params.search?.trim() ?? "";
+  const requestedRole = params.role ?? "ALL";
+  const role = requestedRole === "ALL" || !Object.values(Role).includes(requestedRole as Role) ? "ALL" : (requestedRole as Role);
+
+  const where = {
+    ...(role !== "ALL" ? { role } : {}),
+    ...(search
+      ? {
+          OR: [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+
+  const [users, totalUsers] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: PAGE_SIZE,
+      skip: (normalizedPage - 1) * PAGE_SIZE,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+        createdAt: true,
+      },
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalUsers / PAGE_SIZE));
+
+  return <UsersDashboard users={users} page={normalizedPage} totalPages={totalPages} search={search} role={role} />;
 }
