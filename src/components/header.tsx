@@ -10,6 +10,7 @@ import { AuthStatusControls } from "@/components/auth-status-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { getInitials } from "@/lib/get-initials";
 
 type MenuItem = {
   label: string;
@@ -36,15 +37,11 @@ const menuItems: MenuItem[] = [
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isClubMobileOpen, setIsClubMobileOpen] = useState(false);
+  const [failedAvatarSrc, setFailedAvatarSrc] = useState<string | null>(null);
   const { data: session } = useSession();
-  const userInitials =
-    session?.user?.name
-      ?.split(" ")
-      .filter(Boolean)
-      .map((namePart) => namePart[0] ?? "")
-      .join("")
-      .slice(0, 2)
-      .toUpperCase() || "U";
+  const avatarSrc = session?.user?.image?.trim() ?? "";
+  const shouldShowAvatarImage = Boolean(avatarSrc) && failedAvatarSrc !== avatarSrc;
+  const userInitials = getInitials(session?.user?.name);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
@@ -107,11 +104,22 @@ export function Header() {
                   aria-label="Accéder à mon espace utilisateur"
                   className="inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={session?.user?.image ?? ""} alt={session?.user?.name ?? "Utilisateur"} />
-                    <AvatarFallback className="flex items-center justify-center text-xs font-semibold">
-                      {userInitials}
-                    </AvatarFallback>
+                  <Avatar className="h-8 w-8 flex-shrink-0">
+                    {shouldShowAvatarImage ? (
+                      <AvatarImage
+                        src={avatarSrc}
+                        alt={session?.user?.name ?? "Utilisateur"}
+                        className="object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                          setFailedAvatarSrc(avatarSrc);
+                        }}
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-muted text-xs font-semibold text-muted-foreground">
+                        {userInitials}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                 </Link>
                 <Button

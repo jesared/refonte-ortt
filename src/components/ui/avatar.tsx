@@ -15,10 +15,11 @@ export function Avatar({ className, ...props }: React.HTMLAttributes<HTMLDivElem
 type AvatarImageProps = {
   alt: string;
   className?: string;
+  onError?: React.ComponentProps<typeof Image>["onError"];
   src: string;
 };
 
-export function AvatarImage({ className, alt, src }: AvatarImageProps) {
+export function AvatarImage({ className, alt, src, ...props }: AvatarImageProps) {
   const normalizedSrc = src.trim();
 
   if (!normalizedSrc) {
@@ -26,7 +27,14 @@ export function AvatarImage({ className, alt, src }: AvatarImageProps) {
   }
 
   return (
-    <Image className={cn("aspect-square size-full", className)} alt={alt} src={normalizedSrc} width={40} height={40} />
+    <Image
+      className={cn("aspect-square size-full", className)}
+      alt={alt}
+      src={normalizedSrc}
+      width={40}
+      height={40}
+      {...props}
+    />
   );
 }
 
