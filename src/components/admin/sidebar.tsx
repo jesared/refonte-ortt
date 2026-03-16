@@ -1,9 +1,10 @@
 "use client";
 
 import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import { SidebarItem } from "@/components/admin/sidebar-item";
+import type { AdminSidebarSession } from "@/components/admin/admin-session";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -16,13 +17,20 @@ const navigation = [
 ];
 
 type SidebarProps = {
+  session: AdminSidebarSession;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 };
 
-function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role?.toLowerCase() === "admin";
+function SidebarContent({
+  session,
+  onCloseMobile,
+}: {
+  session: AdminSidebarSession;
+  onCloseMobile?: () => void;
+}) {
+  const role = session?.user?.role ?? "USER";
+  const isAdmin = role.toLowerCase() === "admin";
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -65,11 +73,11 @@ function SidebarContent({ onCloseMobile }: { onCloseMobile?: () => void }) {
   );
 }
 
-export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
+export function Sidebar({ session, mobileOpen, onCloseMobile }: SidebarProps) {
   return (
     <>
       <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 border-r border-border bg-background lg:flex lg:flex-col">
-        <SidebarContent />
+        <SidebarContent session={session} />
       </aside>
 
       <div
@@ -93,7 +101,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
             <X className="size-4" />
           </Button>
         </div>
-        <SidebarContent onCloseMobile={onCloseMobile} />
+        <SidebarContent session={session} onCloseMobile={onCloseMobile} />
       </aside>
     </>
   );

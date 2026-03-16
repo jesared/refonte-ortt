@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Sidebar } from "@/components/admin/sidebar";
+import type { AdminSidebarSession } from "@/components/admin/admin-session";
 
 const TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -17,7 +18,12 @@ const TITLES: Record<string, string> = {
   "/admin/profile": "Profil",
 };
 
-export function AdminShell({ children }: { children: ReactNode }) {
+type AdminShellProps = {
+  children: ReactNode;
+  session: AdminSidebarSession;
+};
+
+export function AdminShell({ children, session }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
@@ -33,6 +39,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar
+        session={session}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
       />
