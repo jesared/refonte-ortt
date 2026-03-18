@@ -1,14 +1,13 @@
 "use client";
 
-import type { Session } from "next-auth";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
 import { AdminHeader } from "@/components/admin/admin-header";
-import { Sidebar } from "@/components/admin/sidebar";
 import type { AdminSidebarSession } from "@/components/admin/admin-session";
+import { Sidebar } from "@/components/admin/sidebar";
 
 const TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -38,16 +37,16 @@ export function AdminShell({ children, session }: AdminShellProps) {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="grid h-screen grid-cols-1 overflow-hidden bg-background text-foreground lg:grid-cols-[260px_minmax(0,1fr)]">
       <Sidebar
         session={session}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
       />
 
-      <div className="min-w-0 flex-1">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-        <main className="p-4 sm:p-6">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );
