@@ -37,17 +37,19 @@ export function AdminShell({ children, session }: AdminShellProps) {
   }, [pathname]);
 
   return (
-    <div className="grid h-screen grid-cols-1 overflow-hidden bg-background text-foreground lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
+      <main className="min-w-0 flex-1 overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
+        <div className="flex min-h-full min-w-0 flex-col">
+          <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
+          <div className="min-h-0 flex-1 p-4 sm:p-6">{children}</div>
+        </div>
+      </main>
+
       <Sidebar
         session={session}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
       />
-
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-        <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
-      </div>
     </div>
   );
 }
