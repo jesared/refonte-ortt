@@ -3,8 +3,8 @@
 import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 
-import { SidebarItem } from "@/components/admin/sidebar-item";
 import type { AdminSidebarSession } from "@/components/admin/admin-session";
+import { SidebarItem } from "@/components/admin/sidebar-item";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -76,7 +76,7 @@ function SidebarContent({
 export function Sidebar({ session, mobileOpen, onCloseMobile }: SidebarProps) {
   return (
     <>
-      <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 border-r border-border bg-background lg:flex lg:flex-col">
+      <aside className="hidden h-screen w-64 shrink-0 border-l border-border bg-muted/30 lg:flex lg:flex-col">
         <SidebarContent session={session} />
       </aside>
 
@@ -91,12 +91,12 @@ export function Sidebar({ session, mobileOpen, onCloseMobile }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-border bg-background transition-transform duration-200 lg:hidden",
-          mobileOpen ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 right-0 z-50 flex w-64 flex-col border-l border-border bg-muted/30 transition-transform duration-200 lg:hidden",
+          mobileOpen ? "translate-x-0" : "translate-x-full",
         )}
         aria-label="Navigation mobile"
       >
-        <div className="flex items-center justify-end border-b border-border px-3 py-2">
+        <div className="flex items-center justify-start border-b border-border px-3 py-2">
           <Button variant="outline" size="sm" onClick={onCloseMobile} aria-label="Fermer le menu">
             <X className="size-4" />
           </Button>
