@@ -1,13 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
+import { FileText, Image, LayoutDashboard, LogOut, Newspaper, Shield, Users } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
-import { AdminHeader } from "@/components/admin/admin-header";
 import type { AdminSidebarSession } from "@/components/admin/admin-session";
-import { Sidebar } from "@/components/admin/sidebar";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import type { SidebarLink } from "@/components/sidebar";
+import { Button } from "@/components/ui/button";
 
 const TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -18,13 +21,21 @@ const TITLES: Record<string, string> = {
   "/admin/profile": "Profil",
 };
 
+const ADMIN_LINKS: SidebarLink[] = [
+  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/pages", label: "Pages", icon: FileText },
+  { href: "/admin/news", label: "Actualités", icon: Newspaper },
+  { href: "/admin/media", label: "Médias", icon: Image },
+  { href: "/admin/users", label: "Utilisateurs", icon: Users },
+  { href: "/admin/profile", label: "Profil", icon: Shield },
+];
+
 type AdminShellProps = {
   children: ReactNode;
   session: AdminSidebarSession;
 };
 
 export function AdminShell({ children, session }: AdminShellProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
   const title = useMemo(() => {
@@ -36,20 +47,32 @@ export function AdminShell({ children, session }: AdminShellProps) {
     return TITLES[pathname] ?? "Administration";
   }, [pathname]);
 
-  return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground">
-      <main className="min-w-0 flex-1 overflow-y-auto scroll-smooth [scrollbar-gutter:stable]">
-        <div className="flex min-h-full min-w-0 flex-col">
-          <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-          <div className="min-h-0 flex-1 p-4 sm:p-6">{children}</div>
-        </div>
-      </main>
-
-      <Sidebar
-        session={session}
-        mobileOpen={mobileOpen}
-        onCloseMobile={() => setMobileOpen(false)}
-      />
+  const footer = (
+    <div className="space-y-3">
+      <p className="truncate px-1 text-xs font-medium text-muted-foreground">
+        {session?.user?.email ?? "Utilisateur non connecté"}
+      </p>
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full justify-start gap-3"
+        onClick={() => signOut({ callbackUrl: "/" })}
+      >
+        <LogOut className="size-4" />
+        <span>Déconnexion</span>
+      </Button>
     </div>
+  );
+
+  return (
+    <DashboardLayout
+      sidebarTitle="Olympique Rémois Tennis de Table"
+      sidebarSubtitle="Administration"
+      links={ADMIN_LINKS}
+      headerTitle={title}
+      footer={footer}
+    >
+      {children}
+    </DashboardLayout>
   );
 }
