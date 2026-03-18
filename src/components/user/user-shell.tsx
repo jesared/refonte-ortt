@@ -1,12 +1,24 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
+import {
+  Bell,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Receipt,
+  Shield,
+  Users,
+} from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { AdminHeader } from "@/components/admin/admin-header";
-import { UserSidebar } from "@/components/user/sidebar";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import type { SidebarLink } from "@/components/sidebar";
+import { Button } from "@/components/ui/button";
 
 const TITLES: Record<string, string> = {
   "/user": "Dashboard",
@@ -15,26 +27,59 @@ const TITLES: Record<string, string> = {
   "/user/tarifs": "Tarifs",
 };
 
+const USER_LINKS: SidebarLink[] = [
+  { href: "/user", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/user/profile", label: "Mon profil", icon: Users },
+  { href: "/user/inscriptions", label: "Mes inscriptions", icon: FileText },
+  { href: "/user/documents", label: "Documents", icon: FileText },
+  { href: "/user/tarifs", label: "Tarifs", icon: Receipt },
+  { href: "/user/notifications", label: "Notifications", icon: Bell },
+];
+
 export function UserShell({ children }: { children: ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   const title = useMemo(
     () => TITLES[pathname] ?? "Espace utilisateur",
     [pathname],
   );
 
-  return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <UserSidebar
-        mobileOpen={mobileOpen}
-        onCloseMobile={() => setMobileOpen(false)}
-      />
-
-      <div className="min-w-0 flex-1">
-        <AdminHeader title={title} onMenuClick={() => setMobileOpen(true)} />
-        <main className="p-4 sm:p-6">{children}</main>
-      </div>
+  const footer = (
+    <div className="space-y-3">
+      <p className="truncate px-1 text-xs font-medium text-muted-foreground">
+        {session?.user?.email ?? "Utilisateur non connecté"}
+      </p>
+      {session?.user?.role?.toLowerCase() === "admin" ? (
+        <Link
+          href="/admin"
+          className="inline-flex h-10 w-full items-center justify-start gap-3 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          <Shield className="size-4" />
+          <span>Administration</span>
+        </Link>
+      ) : null}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full justify-start gap-3"
+        onClick={() => signOut({ callbackUrl: "/" })}
+      >
+        <LogOut className="size-4" />
+        <span>Déconnexion</span>
+      </Button>
     </div>
+  );
+
+  return (
+    <DashboardLayout
+      sidebarTitle="Olympique Rémois Tennis de Table"
+      sidebarSubtitle="Mon espace"
+      links={USER_LINKS}
+      headerTitle={title}
+      footer={footer}
+    >
+      {children}
+    </DashboardLayout>
   );
 }
